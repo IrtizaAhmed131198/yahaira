@@ -1,0 +1,359 @@
+@media(max-width:1440px) {
+
+    .box-info-detail {
+        padding: 0 20px;
+    }
+
+    .dashboard-top {
+        padding: 20px 30px;
+    }
+
+    .dashboard-heading h4 {
+        font-size: 30px;
+    }
+
+    .dashboard-heading p {
+        font-size: 17px;
+    }
+
+    .side-bar {
+        padding: 20px 30px;
+    }
+
+    .side-bar ul li a {
+        font-size: 15px;
+    }
+
+    .box-achivement p {
+        font-size: 14px;
+    }
+
+    .box-assiged ul li h5 {
+        font-size: 12px;
+    }
+
+    .form-box label {
+        font-size: 12px;
+    }
+
+    .tab-icon-btn ul {
+        flex-wrap: wrap;
+    }
+
+    .form-box p {
+        font-size: 12px;
+    }
+
+    .login-form {
+        padding: 0 50px;
+    }
+
+    .login-banner .login-banner-heading h1 {
+        font-size: 25px;
+    }
+}
+
+
+@media(max-width:1199px) {
+    .side-bar {
+        padding: 12px;
+    }
+
+    .box-achivement h4 {
+        font-size: 22px;
+    }
+
+    .box-achivement p {
+        font-size: 9px;
+    }
+
+    .search-info input {
+        font-size: 14px;
+        width: 400px;
+    }
+
+    .day-time h4 {
+        font-size: 18px;
+    }
+
+    .meeting-time ul li h6 {
+        font-size: 12px;
+    }
+
+    .meeting-time ul li p {
+        font-size: 13px;
+    }
+
+    .box-assiged ul li {
+        width: 24%;
+    }
+
+    .box-assiged ul {
+        justify-content: start;
+    }
+
+    .time-follow .nav {
+        gap: 5px;
+    }
+
+    .time-follow .nav button {
+        font-size: 12px;
+    }
+
+    .box-achivement h6 {
+        font-size: 14px;
+    }
+
+    .form-box {
+        padding: 10px;
+    }
+
+    .form-box input {
+        font-size: 12px;
+        padding: 5px 15px;
+    }
+
+    .web-btn {
+        padding: 4px 12px;
+        font-size: 12px;
+    }
+
+    .form-box table tr td {
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    .login-form {
+        padding: 0 20px;
+    }
+
+    .login-banner .login-banner-heading h1 {
+        font-size: 18px;
+    }
+
+}
+
+@media(max-width:991px) {
+    .golg-btn {
+        font-size: 10px;
+    }
+
+    p.account-line {
+        font-size: 12px;
+    }
+
+    .remember {
+        margin: 10px 0 10px 0;
+    }
+
+    .login-banner .login-banner-heading {
+        width: 95%;
+    }
+}
+
+@media(max-width:767px) {
+
+    .side-bar {
+        display: none;
+    }
+
+    .mobile-menu {
+        display: flex;
+        align-items: start;
+        flex-direction: column;
+        position: relative;
+        z-index: 1;
+        position: unset;
+        height: auto;
+    }
+
+    .mobile-menu ul {
+        position: absolute;
+        z-index: 10;
+        width: 100%;
+        left: 0;
+        top: 50px;
+        background: var(--dblue-clr);
+        padding: 30px;
+        display: none;
+    }
+
+    .mobile-menu .menu-mob {
+        position: absolute;
+        z-index: 0;
+        right: 20px;
+        top: 25px;
+        width: 50px;
+        cursor: pointer;
+
+    }
+.login-form img.logo-login {
+    background: transparent;
+}
+    .login-form {
+        height: unset;
+        padding: 50px 50px;
+        text-align: center;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    .golg-btn {
+        margin-bottom: 15px;
+    }
+
+    .login-form form {
+        margin-top: 200px;
+    }
+
+    .login-banner {
+        height: 100%;
+        position: absolute;
+        top: 0;
+        z-index: 0;
+        width: 100%;
+    }
+
+    .login-banner img {
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .login-banner:before {
+        position: absolute;
+        z-index: 0;
+        content: "";
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: #000000bf;
+    }
+
+    .remember label {
+        color: var(--wth-clr);
+    }
+
+    .remember a {
+        color: var(--wth-clr);
+    }
+
+    p.account-line {
+        color: var(--wth-clr);
+        font-size: 15px;
+    }
+
+    section.login-pg {
+        overflow: hidden;
+    }
+    
+    .box-achivement {
+    text-align: center;
+    margin-bottom: 15px;
+}
+}
+
+
+
+@media(max-width:575px) {
+
+    .dashboard-top {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .dashboard-heading h4 {
+        font-size: 20px;
+    }
+
+    .box-achivement {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .box-achivement p {
+        font-size: 16px;
+    }
+
+    .dashboard-layout {
+        padding-bottom: 50px;
+    }
+
+    .box-assiged ul li {
+        width: 100%;
+    }
+
+    .form-btn {
+        flex-direction: column;
+    }
+
+    .search-info input {
+        width: 100%;
+    }
+
+    .search-info {
+        width: 100%;
+    }
+
+    .search-info form {
+        width: 100%;
+    }
+
+    .form-btn button {
+        width: 100%;
+    }
+
+    .link-status {
+        flex-direction: column;
+    }
+
+    .link-status button {
+        width: 100%;
+    }
+
+    .link-status p {
+        width: 100%;
+        text-align: center;
+    }
+
+    .profile-img-box .box-achivement {
+        width: 100%;
+    }
+
+    .profile-img-box {
+        flex-wrap: wrap;
+    }
+
+    .form-box table tr th {
+        padding: 5px;
+        font-size: 12px;
+    }
+
+    .active-customer {
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .customer-info-prs p {
+        font-size: 12px;
+    }
+
+    .customer-info-prs p a {
+        font-size: 12px;
+    }
+
+    .time-follow .nav {
+        justify-content: center;
+    }
+
+    .time-follow .nav button {
+        font-size: 15px;
+    }
+
+    .login-form {
+        padding: 50px 20px;
+    }
+}
