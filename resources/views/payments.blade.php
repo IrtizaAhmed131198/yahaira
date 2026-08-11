@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div class="box-info-detail">
-                <div class="tab-icon-btn">
+                {{-- <div class="tab-icon-btn">
                     <ul>
                         <li>
                             <p> Admin · <span>Full</span></p>
@@ -45,7 +45,7 @@
                             <p> Matchmaker / Coach / Billing · <span>None</span></p>
                         </li>
                     </ul>
-                </div>
+                </div> --}}
 
                 <div class="time-follow mt-4">
                     <div class="row">
@@ -55,7 +55,7 @@
                                     @csrf
                                     @method('PUT')
                                     <input type="hidden" name="id" id="payment_id">
-                                    
+
                                     <div class="form-box">
                                         <h5 id="selected-client-name" class="mb-3">Select a payment from the queue</h5>
                                         <div class="row">
@@ -180,7 +180,7 @@
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ]
         });
-        
+
         // Auto-fill price when package changes
         $('#package_id').change(function() {
             let price = $(this).find('option:selected').data('price');
@@ -193,29 +193,29 @@
         $('body').on('click', '.view-payment', function () {
             var paymentId = $(this).data('id');
             let url = '{{ url("/dashboard/payments") }}/' + paymentId;
-            
+
             $.get(url, function (data) {
                 let payment = data.payment;
                 $('#payment_id').val(payment.id);
                 $('#selected-client-name').text('Payment for: ' + (payment.client ? payment.client.full_name : 'Unknown'));
-                
+
                 $('#package_id').val(payment.package_id);
                 $('#amount').val(payment.amount);
                 $('#status').val(payment.status);
                 $('#payment_method').val(payment.payment_method);
-                
+
                 if(payment.contract_signed_at) {
                     $('#contract_signed_at').val(payment.contract_signed_at.split('T')[0]);
                 } else {
                     $('#contract_signed_at').val('');
                 }
-                
+
                 if(payment.paid_at) {
                     $('#paid_at').val(payment.paid_at.split('T')[0]);
                 } else {
                     $('#paid_at').val('');
                 }
-                
+
                 // Enable form fields
                 $('#payment-form').find('input, select, button').prop('disabled', false);
             }).fail(function() {
@@ -235,13 +235,13 @@
         // Save Details Form Submission
         $('#payment-form').submit(function(e) {
             e.preventDefault();
-            
+
             var paymentId = $('#payment_id').val();
             let btn = $('#save-payment-btn');
             btn.prop('disabled', true).text('Saving...');
-            
+
             let url = '{{ url("/dashboard/payments") }}/' + paymentId;
-            
+
             $.ajax({
                 url: url,
                 method: 'PUT',
@@ -264,7 +264,7 @@
                 }
             });
         });
-        
+
     });
 </script>
 @endpush

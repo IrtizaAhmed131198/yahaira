@@ -36,7 +36,7 @@ class ClientController extends Controller
                         return '<button class="btn btn-secondary btn-sm" disabled title="Payment not paid"><i class="fa-solid fa-lock"></i> Locked</button>';
                     }
 
-                    return '<a href="'.route('client-intake-application.edit', $row->id).'" class="btn btn-primary btn-sm"><i class="fa-solid fa-edit"></i> Edit</a>';
+                    return '<a href="'.route('client-intake-application.edit', $row->id).'" class="btn web-btn"><i class="fa-solid fa-edit"></i> Edit</a>';
                 })
                 ->rawColumns(['status', 'action'])
                 ->make(true);

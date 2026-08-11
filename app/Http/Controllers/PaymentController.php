@@ -38,7 +38,7 @@ class PaymentController extends Controller
                     return '<span class="badge bg-secondary">'.ucfirst($row->status).'</span>';
                 })
                 ->addColumn('action', function ($row) {
-                    return '<button class="btn btn-sm btn-primary view-payment" data-id="'.$row->id.'">Select</button>';
+                    return '<button class="btn web-btn view-payment" data-id="'.$row->id.'">Select</button>';
                 })
                 ->rawColumns(['status_label', 'action'])
                 ->make(true);

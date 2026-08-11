@@ -30,14 +30,14 @@
                 </div>
             </div>
             <div class="box-info-detail">
-                <div class="top-notification">
+                {{-- <div class="top-notification">
                     <p>Every user's home screen. Shows only what's assigned to them — their calls, their
                         sessions,
                         their follow-ups. Nothing here is sent automatically; it's a manual to-do list built
                         from
                         what's on the calendar.
                     </p>
-                </div>
+                </div> --}}
                 <div class="activety-details">
                     <div class="row">
                         <div class="col-lg-3 col-md-3 col-12">

@@ -295,7 +295,7 @@
                                                     <button type="button" class="btn web-btn ph-btn" onclick="setStatus('On Hold')">Put On Hold</button>
                                                     <button type="button" class="btn web-btn dec-btn" onclick="setStatus('Declined')">Decline</button>
 
-                                                    <button type="submit" class="btn btn-success ms-auto">Save All Details</button>
+                                                    <button type="submit" class="btn web-btn ms-auto">Save All Details</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -319,10 +319,10 @@
 
         document.getElementById('intake-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             var form = this;
             var submitBtns = form.querySelectorAll('button[type="submit"], button[onclick^="setStatus"]');
-            
+
             // Client-side file size validation (8MB limit total)
             var photoInput = document.getElementById('photo-upload');
             if (photoInput.files.length > 0) {
@@ -343,7 +343,7 @@
             }
 
             submitBtns.forEach(btn => btn.disabled = true);
-    
+
             fetch(form.action, {
                 method: 'POST',
                 body: new FormData(form),
@@ -365,7 +365,7 @@
             })
             .then(data => {
                 submitBtns.forEach(btn => btn.disabled = false);
-                
+
                 if (data.success) {
                     Swal.fire({
                         title: 'Success!',
@@ -387,12 +387,12 @@
             .catch(error => {
                 console.error('Error:', error);
                 submitBtns.forEach(btn => btn.disabled = false);
-                
+
                 let errorMsg = error.message || 'Something went wrong while communicating with the server.';
                 if (error.errors) {
                     errorMsg = Object.values(error.errors).flat().join('\n');
                 }
-                
+
                 Swal.fire({
                     title: 'Error',
                     text: errorMsg,
