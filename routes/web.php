@@ -23,6 +23,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/global-search', [DashboardController::class, 'globalSearch'])->name('global.search');
+    Route::get('/dashboard/client-profile/{id}', [ClientController::class, 'show'])->name('client-profile');
 
     Route::middleware('role:admin|billing')->group(function () {
         Route::get('/dashboard/financial', [FinancialController::class, 'index'])->name('financial');

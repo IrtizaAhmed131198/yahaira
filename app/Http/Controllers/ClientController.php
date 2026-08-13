@@ -32,11 +32,15 @@ class ClientController extends Controller
                     $user = Auth::user();
                     $isPaid = $row->payment && $row->payment->status === 'paid';
 
+                    $buttons = '<a href="'.route('client-profile', $row->id).'" class="btn web-btn me-2" style="background-color: #6c757d; border-color: #6c757d;"><i class="fa-solid fa-user"></i> View Profile</a>';
+                    
                     if ($user->hasRole('closer') && !$isPaid) {
-                        return '<button class="btn btn-secondary btn-sm" disabled title="Payment not paid"><i class="fa-solid fa-lock"></i> Locked</button>';
+                        $buttons .= '<button class="btn btn-secondary btn-sm" disabled title="Payment not paid"><i class="fa-solid fa-lock"></i> Locked</button>';
+                    } else {
+                        $buttons .= '<a href="'.route('client-intake-application.edit', $row->id).'" class="btn web-btn"><i class="fa-solid fa-edit"></i> Edit</a>';
                     }
 
-                    return '<a href="'.route('client-intake-application.edit', $row->id).'" class="btn web-btn"><i class="fa-solid fa-edit"></i> Edit</a>';
+                    return $buttons;
                 })
                 ->rawColumns(['status', 'action'])
                 ->make(true);
@@ -126,5 +130,17 @@ class ClientController extends Controller
         ]);
 
         return response()->json(['success' => true]);
+    }
+
+    public function show($id)
+    {
+        $client = Client::with(['photos', 'deal.closer', 'payment.package'])->findOrFail($id);
+        // Also fetch activities if needed, though they are currently polymorphic
+        $activities = Activity::where('subject_type', Client::class)
+            ->where('subject_id', $client->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('client-profile', compact('client', 'activities'));
     }
 }

@@ -12,22 +12,6 @@
                         Role-based performance views
                     </p>
                 </div>
-                <div class="top-side-icon">
-                    <ul>
-                        <li>
-                            <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa-regular fa-envelope"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa-regular fa-bell"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><img src="{{ asset('images/profile.png') }}" class="img-fluid" alt=""></a>
-                        </li>
-                    </ul>
-                </div>
             </div>
             <div class="box-info-detail">
 
@@ -100,10 +84,10 @@
 
                                     </div>
 
-                                    <div class="form-btn mt-3">
+                                    {{-- <div class="form-btn mt-3">
                                         <button type="button" class="btn web-btn" onclick="alert('Export CSV functionality coming soon.')">Export CSV</button>
                                         <button type="button" class="btn web-btn" onclick="alert('Export PDF functionality coming soon.')">Export PDF</button>
-                                    </div>
+                                    </div> --}}
 
                                 </form>
                             </div>

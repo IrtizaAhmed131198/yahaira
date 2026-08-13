@@ -12,30 +12,8 @@
                         Manage your available packages and pricing
                     </p>
                 </div>
-                <div class="top-side-icon">
-                    <ul>
-                        <li>
-                            <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa-regular fa-envelope"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa-regular fa-bell"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><img src="{{ asset('images/profile.png') }}" class="img-fluid" alt=""></a>
-                        </li>
-                    </ul>
-                </div>
             </div>
             <div class="box-info-detail">
-
-                <div class="search-info mt-4">
-                    <div class="customer-info-prs">
-                        <h5>Packages</h5>
-                    </div>
-                </div>
 
                 <div class="time-follow">
                     <div class="row">

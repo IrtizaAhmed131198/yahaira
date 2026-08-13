@@ -12,22 +12,6 @@
                         Setter workflow — new leads to qualified
                     </p>
                 </div>
-                <div class="top-side-icon">
-                    <ul>
-                        <li>
-                            <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa-regular fa-envelope"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa-regular fa-bell"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><img src="{{ asset('images/profile.png') }}" class="img-fluid" alt=""></a>
-                        </li>
-                    </ul>
-                </div>
             </div>
             <div class="box-info-detail">
                 <div class="tab-icon-btn">
@@ -285,6 +269,11 @@
             dataType: 'json'
         });
 
+        // Auto-open lead if passed in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const openLeadId = urlParams.get('open_lead');
+        let initialLoadComplete = false;
+
         let search = '';
         let statuses = ['new', 'contacted', 'qualified', 'handed_off', 'lost'];
         let pageState = {
@@ -318,6 +307,15 @@
                     state.lastPage = res.pagination.last_page;
 
                     renderLeadBoard(status, res.leads, page > 1);
+
+                    // Trigger auto-open if it's in this batch
+                    if (openLeadId && !initialLoadComplete) {
+                        let targetLead = $(`.lead-item[data-id="${openLeadId}"]`);
+                        if (targetLead.length > 0) {
+                            targetLead.trigger('click');
+                            initialLoadComplete = true; // Only open once
+                        }
+                    }
 
                     // Auto-load next page if column is not full enough to scroll
                     setTimeout(function() {

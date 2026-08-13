@@ -64,7 +64,7 @@ class DashboardController extends Controller
                 $clientName = $match->client->full_name;
             }
             $candidateName = $match ? $match->candidate_name : 'Unknown';
-            
+
             $agenda->push([
                 'title' => 'Introduction Date — ' . $clientName . ' & ' . $candidateName,
                 'details' => ($matchDate->location ?? 'In person') . ' · Matchmaker',
@@ -73,8 +73,47 @@ class DashboardController extends Controller
             ]);
         }
 
-        $agenda = $agenda->sortBy('sort_time')->values();
+        $agenda = $agenda->sortBy('sort_time')->values()->take(5);
 
-        return view('dashboard', compact('callsToday', 'thisWeek', 'activeLeadsClients', 'agenda', 'today'));
+        // 5. Follow-Ups Due
+        // Fetch Deals that have notes (details entered) and are not won/lost
+        $followUpsQuery = Deal::with('lead')
+            ->whereIn('status', ['assigned', 'booked', 'proposal'])
+            ->whereNotNull('notes')
+            ->where('notes', '!=', '');
+
+        if ($user->hasRole('closer') && !$user->hasRole('admin')) {
+            $followUpsQuery->where('assigned_closer_id', $user->id);
+        }
+
+        $followUpsCount = $followUpsQuery->count();
+        $followUps = $followUpsQuery->orderBy('updated_at', 'desc')->take(5)->get();
+
+        return view('dashboard', compact('callsToday', 'thisWeek', 'activeLeadsClients', 'agenda', 'today', 'followUps', 'followUpsCount'));
+    }
+
+    public function globalSearch(Request $request)
+    {
+        $query = $request->input('q');
+
+        if (empty($query)) {
+            return response()->json(['leads' => [], 'clients' => []]);
+        }
+
+        $leads = Lead::where('full_name', 'LIKE', "%{$query}%")
+            ->orWhere('email', 'LIKE', "%{$query}%")
+            ->orWhere('phone', 'LIKE', "%{$query}%")
+            ->take(5)
+            ->get(['id', 'full_name', 'email']);
+
+        $clients = Client::where('full_name', 'LIKE', "%{$query}%")
+            ->orWhere('email', 'LIKE', "%{$query}%")
+            ->take(5)
+            ->get(['id', 'full_name', 'email']);
+
+        return response()->json([
+            'leads' => $leads,
+            'clients' => $clients
+        ]);
     }
 }

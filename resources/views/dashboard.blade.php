@@ -12,22 +12,6 @@
                         Personal to-do list for the day
                     </p>
                 </div>
-                <div class="top-side-icon">
-                    <ul>
-                        <li>
-                            <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa-regular fa-envelope"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa-regular fa-bell"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><img src="images/profile.png" class="img-fluid" alt=""></a>
-                        </li>
-                    </ul>
-                </div>
             </div>
             <div class="box-info-detail">
                 {{-- <div class="top-notification">
@@ -54,7 +38,7 @@
                         </div>
                         <div class="col-lg-3 col-md-3 col-12">
                             <div class="box-achivement">
-                                <h4>5</h4>
+                                <h4>{{ $followUpsCount }}</h4>
                                 <p>Follow-Ups Due</p>
                             </div>
                         </div>
@@ -65,12 +49,15 @@
                             </div>
                         </div>
                         <div class="col-lg-12 col-md-12 col-12">
-                            <div class="search-info">
-                                <form>
-                                    <input type="search" name="" class="form-control"
-                                        placeholder="Search leads, clients, candidates…" id="">
+                            <div class="search-info position-relative">
+                                <form autocomplete="off" onsubmit="event.preventDefault();">
+                                    <input type="search" name="q" class="form-control"
+                                        placeholder="Search leads, clients…" id="globalSearchInput">
                                     <i class="fa-solid fa-magnifying-glass"></i>
                                 </form>
+                                <div id="globalSearchResults" class="dropdown-menu w-100" style="display: none; position: absolute; top: 100%; left: 0; z-index: 1000;">
+                                    <!-- Results will be injected here -->
+                                </div>
                                 <div class="add-user">
                                     @if(!Auth::user()->hasRole('admin'))
                                         <button class="btn web-btn" data-bs-toggle="modal" data-bs-target="#addLeadModal">Add New Lead</button>
@@ -107,14 +94,16 @@
                             <div class="meeting-time">
                                 <h5>Follow-Ups Due</h5>
                                 <ul>
-                                    <li>
-                                        <h6>Call back — Monica L.</h6>
-                                        <p>Due today, 2:00 PM</p>
-                                    </li>
-                                    <li>
-                                        <h6>Renewal check-in — Devon P.</h6>
-                                        <p>Due in 2 days</p>
-                                    </li>
+                                    @forelse($followUps as $followUp)
+                                        <li>
+                                            <h6>Pending Follow-Up — {{ $followUp->lead ? $followUp->lead->full_name : 'Unknown' }}</h6>
+                                            <p>Note: {{ Str::limit($followUp->notes, 60) }}</p>
+                                        </li>
+                                    @empty
+                                        <li>
+                                            <h6 class="text-muted">No pending follow-ups.</h6>
+                                        </li>
+                                    @endforelse
                                 </ul>
                             </div>
                         </div>
@@ -180,6 +169,56 @@
                 'Accept': 'application/json'
             },
             dataType: 'json'
+        });
+
+        // Global Search Logic
+        let searchTimeout = null;
+
+        $('#globalSearchInput').on('keyup', function() {
+            let query = $(this).val();
+            let resultsBox = $('#globalSearchResults');
+
+            clearTimeout(searchTimeout);
+
+            if (query.length < 2) {
+                resultsBox.hide();
+                return;
+            }
+
+            searchTimeout = setTimeout(function() {
+                $.get('{{ route("global.search") }}', { q: query }, function(data) {
+                    let html = '';
+
+                    if (data.leads.length > 0) {
+                        html += '<h6 class="dropdown-header">Leads</h6>';
+                        data.leads.forEach(function(lead) {
+                            html += `<a class="dropdown-item" href="{{ route('lead-management') }}?open_lead=${lead.id}">${lead.full_name} <small class="text-muted">(${lead.email})</small></a>`;
+                        });
+                    }
+
+                    if (data.clients.length > 0) {
+                        if (html !== '') html += '<div class="dropdown-divider"></div>';
+                        html += '<h6 class="dropdown-header">Clients</h6>';
+                        data.clients.forEach(function(client) {
+                            let editUrl = '{{ route("client-profile", ":id") }}'.replace(':id', client.id);
+                            html += `<a class="dropdown-item" href="${editUrl}">${client.full_name} <small class="text-muted">(${client.email})</small></a>`;
+                        });
+                    }
+
+                    if (html === '') {
+                        html = '<span class="dropdown-item text-muted">No results found.</span>';
+                    }
+
+                    resultsBox.html(html).show();
+                });
+            }, 300);
+        });
+
+        // Hide dropdown when clicking outside
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('.search-info').length) {
+                $('#globalSearchResults').hide();
+            }
         });
 
         // Add lead form

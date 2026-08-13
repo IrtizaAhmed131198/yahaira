@@ -12,22 +12,6 @@
                         Revenue, profit, sales performance
                     </p>
                 </div>
-                <div class="top-side-icon">
-                    <ul>
-                        <li>
-                            <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa-regular fa-envelope"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa-regular fa-bell"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><img src="{{ asset('images/profile.png') }}" class="img-fluid" alt=""></a>
-                        </li>
-                    </ul>
-                </div>
             </div>
             <div class="box-info-detail">
 
@@ -102,9 +86,9 @@
                                     </table>
 
                                 </div>
-                                <div class="form-btn mt-3">
+                                {{-- <div class="form-btn mt-3">
                                     <button class="btn web-btn" onclick="alert('Export functionality coming soon.')">Export Financial Report (Admin only)</button>
-                                </div>
+                                </div> --}}
 
                             </div>
                         </div>
@@ -118,7 +102,7 @@
                                                 <label for="">Revenue by Package
                                                 </label>
                                             </div>
-                                            
+
                                             @forelse($revenueByPackage as $package)
                                             <div class="col-12">
                                                 <label for="">{{ $package['package_name'] }}</label>
@@ -129,7 +113,7 @@
                                                 <p class="text-muted">No package revenue data available.</p>
                                             </div>
                                             @endforelse
-                                            
+
                                         </div>
                                     </div>
                                 </form>
