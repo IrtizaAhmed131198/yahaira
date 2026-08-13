@@ -59,7 +59,7 @@
                                     <!-- Results will be injected here -->
                                 </div>
                                 <div class="add-user">
-                                    @if(!Auth::user()->hasRole('admin'))
+                                    @if(Auth::user()->hasRole('setter'))
                                         <button class="btn web-btn" data-bs-toggle="modal" data-bs-target="#addLeadModal">Add New Lead</button>
                                     @endif
                                 </div>
