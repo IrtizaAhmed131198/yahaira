@@ -26,8 +26,18 @@ class PaymentController extends Controller
                 ->addColumn('client_name', function ($row) {
                     return $row->client ? $row->client->full_name : 'N/A';
                 })
+                ->filterColumn('client_name', function($query, $keyword) {
+                    $query->whereHas('client', function($q) use($keyword) {
+                        $q->where('full_name', 'like', "%{$keyword}%");
+                    });
+                })
                 ->addColumn('package_name', function ($row) {
                     return $row->package ? $row->package->name : 'None';
+                })
+                ->filterColumn('package_name', function($query, $keyword) {
+                    $query->whereHas('package', function($q) use($keyword) {
+                        $q->where('name', 'like', "%{$keyword}%");
+                    });
                 })
                 ->addColumn('status_label', function ($row) {
                     if ($row->status === 'invoice_sent') {
