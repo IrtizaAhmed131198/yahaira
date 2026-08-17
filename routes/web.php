@@ -48,7 +48,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/dashboard/team-and-user-management/{id}', [TeamUserController::class, 'destroy'])->name('team-and-user-management.destroy');
     });
 
-    Route::middleware('role:admin|setter')->group(function () {
+    Route::middleware('role:admin|setter|closer')->group(function () {
         Route::get('/dashboard/lead-management', [LeadController::class, 'index'])->name('lead-management');
         Route::get('/dashboard/lead-management/data', [LeadController::class, 'getLeads'])->name('lead-management.data');
         Route::post('/dashboard/lead-management', [LeadController::class, 'store'])->name('lead-management.store');

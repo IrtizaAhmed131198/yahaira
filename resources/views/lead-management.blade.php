@@ -36,35 +36,29 @@
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </form>
                         <div class="add-user">
-                            @if(!Auth::user()->hasRole('admin'))
+                            @if(!Auth::user()->hasRole('closer'))
                                 <button class="btn web-btn" data-bs-toggle="modal" data-bs-target="#addLeadModal">Add New Lead</button>
                             @endif
                         </div>
                     </div>
                 </div>
-                <div class="box-assiged">
-                    <ul>
-                        <li data-status="new">
-                            <h5>New <span id="count-new">0</span></h5>
-                            <div id="list-new"></div>
-                        </li>
-                        <li data-status="contacted">
-                            <h5>Contacted <span id="count-contacted">0</span></h5>
-                            <div id="list-contacted"></div>
-                        </li>
-                        <li data-status="qualified">
-                            <h5>Qualified <span id="count-qualified">0</span></h5>
-                            <div id="list-qualified"></div>
-                        </li>
-                        <li data-status="handed_off">
-                            <h5>Handed to Closer <span id="count-handed_off">0</span></h5>
-                            <div id="list-handed_off"></div>
-                        </li>
-                        <li data-status="lost">
-                            <h5>Not a Fit / Lost <span id="count-lost">0</span></h5>
-                            <div id="list-lost"></div>
-                        </li>
-                    </ul>
+                <div class="table-responsive mt-4">
+                    <table class="table table-bordered table-hover leads-datatable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Source</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Created At</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leads-table-body">
+                            <!-- Leads will be loaded here via AJAX -->
+                        </tbody>
+                    </table>
+                    <div id="loading-spinner" style="display: none; text-align: center; padding: 10px;">Loading...</div>
                 </div>
                 <div class="time-follow" id="lead-card-section" style="display: none;">
                     <div class="row">
@@ -122,10 +116,6 @@
                                                         <label for="">Status</label>
                                                         <select class="form-control fw-bold" id="card_status" name="status">
                                                             <option value="new">New</option>
-                                                            <option value="contacted">Contacted</option>
-                                                            <option value="qualified">Qualified</option>
-                                                            <option value="handed_off">Handed to Closer</option>
-                                                            <option value="lost">Not a Fit / Lost</option>
                                                         </select>
                                                     </div>
                                                     <div class="col-6 mb-3">
@@ -134,7 +124,7 @@
                                                             id="card_next_followup" name="next_followup_at">
                                                     </div>
                                                     <div class="col-12 mt-2 text-end">
-                                                        @if(!Auth::user()->hasRole('admin'))
+                                                        @if(!Auth::user()->hasRole('closer'))
                                                             <button type="button" class="btn web-btn ph-btn" id="update-details-btn">Save Lead Details</button>
                                                         @endif
                                                     </div>
@@ -146,7 +136,7 @@
                                                     <ul id="lead-notes-container" style="max-height: 300px; overflow-y: auto;">
                                                         <!-- Notes loaded via AJAX -->
                                                     </ul>
-                                                    @if(!Auth::user()->hasRole('admin'))
+                                                    @if(!Auth::user()->hasRole('admin') && !Auth::user()->hasRole('closer'))
                                                         <div class="mt-3">
                                                             <textarea class="form-control mb-2" id="new_note_text" rows="2" placeholder="Type a note... (e.g. Called — very interested)"></textarea>
                                                             <button type="button" class="btn web-btn ph-btn" id="save-note-btn">Add Note</button>
@@ -154,14 +144,7 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                            @if(!Auth::user()->hasRole('admin'))
-                                                <div class="col-12 mt-4">
-                                                    <div class="form-btn">
-                                                        <button type="button" class="btn web-btn ph-btn update-status" data-status="qualified">Mark Qualified & Hand to Closer</button>
-                                                        <button type="button" class="btn web-btn dec-btn update-status" data-status="lost">Mark Not a Fit / Lost</button>
-                                                    </div>
-                                                </div>
-                                            @endif
+
                                         </div>
                                     </div>
                                 </form>
@@ -223,6 +206,7 @@
 
 @stack('styles')
 <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
 <style>
     .lead-item {
         cursor: pointer;
@@ -234,30 +218,30 @@
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     .lead-item.active {
-        border: 2px solid #0d6efd;
-        background-color: #f8f9fa;
+        background-color: #e9ecef;
     }
-    .box-assiged ul li {
-        height: calc(100vh - 250px);
-        overflow-y: scroll;
+    .leads-datatable tbody tr {
+        cursor: pointer;
     }
-
-    /* Optional: customize scrollbar for columns */
-    .box-assiged ul li::-webkit-scrollbar {
-        width: 5px;
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
     }
-    .box-assiged ul li::-webkit-scrollbar-thumb {
-        background: #ccc;
-        border-radius: 5px;
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background: none !important;
+        border: none !important;
     }
 </style>
 
 @push('scripts')
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
 <script>
     $(document).ready(function() {
 
-        @if(Auth::user()->hasRole('admin'))
-            // Disable all form inputs for admins
+        @if(Auth::user()->hasRole('closer'))
+            // Disable all form inputs for closers
             $('#update-lead-form input, #update-lead-form select').prop('disabled', true);
         @endif
 
@@ -274,114 +258,65 @@
         const openLeadId = urlParams.get('open_lead');
         let initialLoadComplete = false;
 
-        let search = '';
-        let statuses = ['new', 'contacted', 'qualified', 'handed_off', 'lost'];
-        let pageState = {
-            'new': { page: 1, lastPage: 1, loading: false },
-            'contacted': { page: 1, lastPage: 1, loading: false },
-            'qualified': { page: 1, lastPage: 1, loading: false },
-            'handed_off': { page: 1, lastPage: 1, loading: false },
-            'lost': { page: 1, lastPage: 1, loading: false }
-        };
-
         let notesPage = 1;
         let notesLastPage = 1;
         let notesLoading = false;
 
-        // Initial load for all statuses
-        function loadAllLeads() {
-            statuses.forEach(status => {
-                pageState[status].page = 1;
-                loadLeads(status, 1);
-            });
-        }
-        loadAllLeads();
-
-        function loadLeads(status, page = 1) {
-            let state = pageState[status];
-            if (state.loading || page > state.lastPage) return;
-            state.loading = true;
-
-            $.get(`{{ route("lead-management.data") }}?status=${status}&page=${page}&search=${search}`, function(res) {
-                if(res.success) {
-                    state.lastPage = res.pagination.last_page;
-
-                    renderLeadBoard(status, res.leads, page > 1);
-
-                    // Trigger auto-open if it's in this batch
-                    if (openLeadId && !initialLoadComplete) {
-                        let targetLead = $(`.lead-item[data-id="${openLeadId}"]`);
-                        if (targetLead.length > 0) {
-                            targetLead.trigger('click');
-                            initialLoadComplete = true; // Only open once
-                        }
-                    }
-
-                    // Auto-load next page if column is not full enough to scroll
-                    setTimeout(function() {
-                        if (state.page < state.lastPage) {
-                            let col = $('.box-assiged ul li[data-status="' + status + '"]');
-                            if (col.prop('scrollHeight') <= col.innerHeight() + 10) {
-                                state.page++;
-                                loadLeads(status, state.page);
-                            }
-                        }
-                    }, 100);
+        var leadsTable = $('.leads-datatable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{{ route("lead-management.data") }}',
+                data: function (d) {
+                    d.status = 'new';
                 }
-            }).always(function() {
-                state.loading = false;
-            });
-        }
-
-        function renderLeadBoard(status, leads, append = false) {
-            let listId = '#list-' + status;
-            let countId = '#count-' + status;
-
-            if (!append) {
-                $(listId).html('');
-            }
-
-            let html = '';
-            leads.forEach(function(lead) {
-                let sourceText = lead.source || 'Website';
-                let phoneLink = lead.phone ? `<br> <a href="tel:${lead.phone}">${lead.phone}</a>` : '';
-                let displayStatus = lead.status ? lead.status : status;
-
-                html += `
-                    <div class="customer-info lead-item" data-id="${lead.id}">
-                        <h6>${lead.full_name}</h6>
-                        <p>${sourceText}
-                            ${phoneLink}
-                        </p>
-                        <span>${displayStatus.charAt(0).toUpperCase() + displayStatus.slice(1)}</span>
-                    </div>
-                `;
-            });
-
-            $(listId).append(html);
-
-            // Update counts based on DOM elements
-            let currentCount = $(listId + ' .lead-item').length;
-            $(countId).text(currentCount < 10 ? '0' + currentCount : currentCount);
-        }
-
-        $('.box-assiged ul li').scroll(function() {
-            let status = $(this).data('status');
-            if (!status) return;
-
-            if ($(this).scrollTop() + $(this).innerHeight() >= this.scrollHeight - 20) {
-                let state = pageState[status];
-                if (!state.loading && state.page < state.lastPage) {
-                    state.page++;
-                    loadLeads(status, state.page);
+            },
+            columns: [
+                { data: 'full_name', name: 'full_name' },
+                { data: 'source', name: 'source' },
+                { 
+                    data: 'phone', 
+                    name: 'phone',
+                    render: function(data) {
+                        return data ? data : '-';
+                    }
+                },
+                { 
+                    data: 'email', 
+                    name: 'email',
+                    render: function(data) {
+                        return data ? data : '-';
+                    }
+                },
+                { 
+                    data: 'status_formatted', 
+                    name: 'status',
+                    render: function(data, type, row) {
+                        return `<span class="badge bg-primary">${data}</span>`;
+                    }
+                },
+                { data: 'created_at_formatted', name: 'created_at' }
+            ],
+            createdRow: function(row, data, dataIndex) {
+                $(row).addClass('lead-item');
+                $(row).attr('data-id', data.id);
+            },
+            drawCallback: function(settings) {
+                // Auto-open lead if passed in URL
+                if (openLeadId && !initialLoadComplete) {
+                    let targetLead = $(`.lead-item[data-id="${openLeadId}"]`);
+                    if (targetLead.length > 0) {
+                        targetLead.trigger('click');
+                        initialLoadComplete = true;
+                    }
                 }
             }
         });
 
-        //search
+        // Hide custom search box if using Datatable's own, or wire it up:
+        // Let's wire the existing custom search input to the Datatable search
         $('#search-leads').on('keyup', function() {
-            search = $(this).val();
-            loadAllLeads();
+            leadsTable.search($(this).val()).draw();
         });
 
         // Add lead form
@@ -404,7 +339,7 @@
                     });
                     $('#add-lead-form')[0].reset();
                     $('#addLeadModal').modal('hide');
-                    loadAllLeads();
+                    leadsTable.draw(false);
                 },
                 error: function(xhr) {
                     let errorMsg = xhr.responseJSON?.message || 'Error creating lead';
@@ -458,16 +393,7 @@
                     $('#card_next_followup').val('');
                 }
 
-                let statusVal = lead.status ? lead.status.toLowerCase() : 'new';
-                // normalize status value
-                if(statusVal !== 'new' && statusVal !== 'contacted' && statusVal !== 'qualified' && statusVal !== 'lost' && statusVal !== 'handed_off') {
-                    if (statusVal.includes('hand') || statusVal.includes('closer')) {
-                        statusVal = 'handed_off';
-                    } else {
-                        statusVal = 'new';
-                    }
-                }
-                $('#card_status').val(statusVal);
+                $('#card_status').val('new');
 
                 $('#leadCardTitle').text('Lead Card — ' + lead.full_name + ' (opened)');
 
@@ -579,51 +505,7 @@
             });
         });
 
-        // Update Status
-        $('.update-status').click(function(e) {
-            e.preventDefault();
-            let status = $(this).data('status');
-            let leadId = $('#card_lead_id').val();
 
-            if(!leadId) return;
-
-            let url = '{{ route("lead-management.update", ":id") }}'.replace(':id', leadId);
-
-            $.ajax({
-                url: url,
-                method: 'PUT',
-                data: { status: status },
-                success: function(response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Status Updated!',
-                        text: 'Lead marked as ' + status,
-                        timer: 1500,
-                        showConfirmButton: false
-                    });
-
-                    let statusVal = status.toLowerCase();
-                    if(statusVal !== 'new' && statusVal !== 'contacted' && statusVal !== 'qualified' && statusVal !== 'lost' && statusVal !== 'handed_off') {
-                        if (statusVal.includes('hand') || statusVal.includes('closer')) {
-                            statusVal = 'handed_off';
-                        } else {
-                            statusVal = 'new';
-                        }
-                    }
-                    $('#card_status').val(statusVal);
-
-                    loadAllLeads(); // Refresh board
-
-                },
-                error: function(xhr) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: xhr.responseJSON?.message || 'Error updating status'
-                    });
-                }
-            });
-        });
 
         // Update Lead Details
         $('#update-details-btn').click(function(e) {
@@ -648,7 +530,7 @@
                         timer: 1500,
                         showConfirmButton: false
                     });
-                    loadAllLeads(); // Refresh board to reflect name/phone changes
+                    leadsTable.draw(false); // Refresh board to reflect name/phone changes
                 },
                 error: function(xhr) {
                     Swal.fire({

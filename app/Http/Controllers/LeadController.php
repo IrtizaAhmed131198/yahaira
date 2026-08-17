@@ -24,15 +24,7 @@ class LeadController extends Controller
     {
         $query = Lead::with('setter')->orderBy('created_at', 'desc');
 
-        // Search functionality
-        if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('full_name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('phone', 'like', "%{$search}%");
-            });
-        }
+
 
         // If setter, only show their leads
         if (Auth::user()->hasRole('setter') && !Auth::user()->hasRole('admin')) {
@@ -53,18 +45,19 @@ class LeadController extends Controller
             }
         }
 
-        $leads = $query->paginate(15);
+        if ($request->ajax()) {
+            return DataTables::of($query)
+                ->addColumn('created_at_formatted', function ($lead) {
+                    return $lead->created_at ? $lead->created_at->format('M d, Y') : '-';
+                })
+                ->addColumn('status_formatted', function ($lead) {
+                    return ucfirst($lead->status ?? 'new');
+                })
+                ->make(true);
+        }
 
-        return response()->json([
-            'success' => true,
-            'status' => $request->status,
-            'leads' => $leads->items(),
-            'pagination' => [
-                'current_page' => $leads->currentPage(),
-                'last_page' => $leads->lastPage(),
-                'total' => $leads->total()
-            ]
-        ]);
+        // Just in case it's not ajax
+        return response()->json([]);
     }
 
     public function show($id)
@@ -114,10 +107,9 @@ class LeadController extends Controller
 
     public function store(Request $request)
     {
-        if (Auth::user()->hasRole('admin')) {
-            return response()->json(['success' => false, 'message' => 'Admins have view-only access.'], 403);
+        if (Auth::user()->hasRole('closer')) {
+            return response()->json(['success' => false, 'message' => 'Closers have view-only access.'], 403);
         }
-
         $request->validate([
             'full_name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
@@ -135,6 +127,13 @@ class LeadController extends Controller
 
         $this->logActivity('created lead', Lead::class, $lead->id, 'Lead created manually');
 
+        if ($lead->status === 'new') {
+            Deal::firstOrCreate(
+                ['lead_id' => $lead->id],
+                ['status' => 'assigned']
+            );
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Lead created successfully',
@@ -144,8 +143,8 @@ class LeadController extends Controller
 
     public function update(Request $request, $id)
     {
-        if (Auth::user()->hasRole('admin')) {
-            return response()->json(['success' => false, 'message' => 'Admins have view-only access.'], 403);
+        if (Auth::user()->hasRole('closer')) {
+            return response()->json(['success' => false, 'message' => 'Closers have view-only access.'], 403);
         }
 
         $lead = Lead::findOrFail($id);
@@ -169,7 +168,7 @@ class LeadController extends Controller
         if ($oldStatus != $lead->status) {
             $this->logActivity('status changed', Lead::class, $lead->id, "Status changed from {$oldStatus} to {$lead->status}");
 
-            if ($lead->status === 'handed_off') {
+            if ($lead->status === 'new') {
                 Deal::firstOrCreate(
                     ['lead_id' => $lead->id],
                     ['status' => 'assigned']
@@ -185,8 +184,8 @@ class LeadController extends Controller
 
     public function addNote(Request $request, $id)
     {
-        if (Auth::user()->hasRole('admin')) {
-            return response()->json(['success' => false, 'message' => 'Admins have view-only access.'], 403);
+        if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('closer')) {
+            return response()->json(['success' => false, 'message' => 'Admins and Closers cannot add notes.'], 403);
         }
 
         $request->validate([

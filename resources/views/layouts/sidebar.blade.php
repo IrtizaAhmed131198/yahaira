@@ -4,7 +4,7 @@
         <li>
             <a href="{{ route('dashboard') }}">My Dashboard</a>
         </li>
-        @if(Auth::user()->hasRole('admin|setter'))
+        @if(Auth::user()->hasRole('admin|setter|closer'))
         <li>
             <a href="{{ route('lead-management') }}">Lead Management</a>
         </li>
