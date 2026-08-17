@@ -110,6 +110,103 @@
                     </div>
                 </div>
 
+                <div class="time-follow" id="client-intake-section" style="display: none;">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-12">
+                            <div class="review-user">
+                                <div class="day-time">
+                                    <h4>Client Intake Form</h4>
+                                </div>
+                                <form id="intake-form" enctype="multipart/form-data">
+                                    <input type="hidden" id="intake_client_id" name="client_id">
+                                    <input type="hidden" id="intake_deal_id" name="deal_id">
+                                    <nav>
+                                        <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+                                            <button class="nav-link active" id="nav-basic-info-tab" data-bs-toggle="tab" data-bs-target="#nav-basic-info" type="button" role="tab" aria-controls="nav-basic-info" aria-selected="true">Basic Info</button>
+                                            <button class="nav-link" id="nav-personal-goal-tab" data-bs-toggle="tab" data-bs-target="#nav-personal-goal" type="button" role="tab" aria-controls="nav-personal-goal" aria-selected="false">Personal & Goal</button>
+                                            <button class="nav-link" id="nav-value-lifestyle-tab" data-bs-toggle="tab" data-bs-target="#nav-value-lifestyle" type="button" role="tab" aria-controls="nav-value-lifestyle" aria-selected="false">Values & Lifestyle</button>
+                                            <button class="nav-link" id="nav-emotional-readiness-tab" data-bs-toggle="tab" data-bs-target="#nav-emotional-readiness" type="button" role="tab" aria-controls="nav-emotional-readiness" aria-selected="false">Emotional Readiness</button>
+                                            <button class="nav-link" id="nav-partner-criteria-tab" data-bs-toggle="tab" data-bs-target="#nav-partner-criteria" type="button" role="tab" aria-controls="nav-partner-criteria" aria-selected="false">Partner Criteria</button>
+                                        </div>
+                                    </nav>
+
+                                    <div class="tab-content" id="nav-tabContent">
+                                        <!-- BASIC INFO -->
+                                        <div class="tab-pane fade show active" id="nav-basic-info" role="tabpanel" aria-labelledby="nav-basic-info-tab">
+                                            <div class="form-box">
+                                                <div class="row">
+                                                    <div class="col-6"><div class="form-group mb-3"><label>Full Name</label><input type="text" name="full_name" id="intake_full_name" class="form-control" required></div></div>
+                                                    <div class="col-6"><div class="form-group mb-3"><label>Email</label><input type="email" name="email" id="intake_email" class="form-control" required></div></div>
+                                                    <div class="col-6"><div class="form-group mb-3"><label>Phone</label><input type="text" name="phone" id="intake_phone" class="form-control"></div></div>
+                                                    <div class="col-6"><div class="form-group mb-3"><label>Timezone</label><input type="text" name="timezone" id="intake_timezone" class="form-control"></div></div>
+                                                    <div class="col-6" style="display:none;"><input type="hidden" name="status" id="intake_status" value="active"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- PERSONAL & GOAL -->
+                                        <div class="tab-pane fade" id="nav-personal-goal" role="tabpanel" aria-labelledby="nav-personal-goal-tab">
+                                            <div class="form-box">
+                                                <div class="row">
+                                                    <div class="col-6"><div class="form-group mb-3"><label>Date of Birth</label><input type="date" name="date_of_birth" id="intake_date_of_birth" class="form-control"></div></div>
+                                                    <div class="col-6"><div class="form-group mb-3"><label>Occupation</label><input type="text" name="occupation" id="intake_occupation" class="form-control"></div></div>
+                                                    <div class="col-6"><div class="form-group mb-3"><label>Relationship Goal</label><input type="text" name="relationship_goal" id="intake_relationship_goal" class="form-control"></div></div>
+                                                    <div class="col-6"><div class="form-group mb-3"><label>Commitment Timeline</label><input type="text" name="commitment_timeline" id="intake_commitment_timeline" class="form-control"></div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- VALUES & LIFESTYLE -->
+                                        <div class="tab-pane fade" id="nav-value-lifestyle" role="tabpanel" aria-labelledby="nav-value-lifestyle-tab">
+                                            <div class="form-box">
+                                                <div class="row">
+                                                    <div class="col-6"><div class="form-group mb-3"><label>Core Values (top 3)</label><input type="text" name="core_values" id="intake_core_values" class="form-control"></div></div>
+                                                    <div class="col-6"><div class="form-group mb-3"><label>Lifestyle</label><input type="text" name="lifestyle" id="intake_lifestyle" class="form-control"></div></div>
+                                                    <div class="col-6"><div class="form-group mb-3"><label>Faith / Spiritual Practice</label><input type="text" name="faith" id="intake_faith" class="form-control"></div></div>
+                                                    <div class="col-6"><div class="form-group mb-3"><label>Children</label><input type="text" name="children" id="intake_children" class="form-control"></div></div>
+                                                    <div class="col-12"><div class="form-group mb-3"><label>Deal-Breakers</label><input type="text" name="deal_breakers" id="intake_deal_breakers" class="form-control"></div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- EMOTIONAL READINESS -->
+                                        <div class="tab-pane fade" id="nav-emotional-readiness" role="tabpanel" aria-labelledby="nav-emotional-readiness-tab">
+                                            <div class="form-box">
+                                                <div class="row">
+                                                    <div class="col-12"><div class="form-group mb-3"><label>Current Stage</label><input type="text" name="current_stage" id="intake_current_stage" class="form-control"></div></div>
+                                                    <div class="col-6"><div class="form-group mb-3"><label>What did you learn from your last relationship?</label><input type="text" name="learned_from_last_relationship" id="intake_learned_from_last_relationship" class="form-control"></div></div>
+                                                    <div class="col-6"><div class="form-group mb-3"><label>What are you ready for now?</label><input type="text" name="ready_for_now" id="intake_ready_for_now" class="form-control"></div></div>
+                                                    <div class="col-12"><div class="form-group mb-3"><label>Support System in Place?</label><input type="text" name="support_system" id="intake_support_system" class="form-control"></div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- PARTNER CRITERIA -->
+                                        <div class="tab-pane fade" id="nav-partner-criteria" role="tabpanel" aria-labelledby="nav-partner-criteria-tab">
+                                            <div class="form-box">
+                                                <div class="row">
+                                                    <div class="col-6"><div class="form-group mb-3"><label>Age Range</label><input type="text" name="partner_age_range" id="intake_partner_age_range" class="form-control"></div></div>
+                                                    <div class="col-6"><div class="form-group mb-3"><label>Location Radius</label><input type="text" name="partner_location_radius" id="intake_partner_location_radius" class="form-control"></div></div>
+                                                    <div class="col-6"><div class="form-group mb-3"><label>Education Level</label><input type="text" name="partner_education_level" id="intake_partner_education_level" class="form-control"></div></div>
+                                                    <div class="col-6"><div class="form-group mb-3"><label>Career Stage</label><input type="text" name="partner_career_stage" id="intake_partner_career_stage" class="form-control"></div></div>
+                                                    <div class="col-12"><div class="form-group mb-3"><label>Must-Haves</label><input type="text" name="partner_must_haves" id="intake_partner_must_haves" class="form-control"></div></div>
+                                                    <div class="col-12"><div class="form-group mb-3"><label>Nice-to-Haves</label><input type="text" name="partner_nice_to_haves" id="intake_partner_nice_to_haves" class="form-control"></div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-box mt-3">
+                                        <div class="row">
+                                            <div class="col-12 text-end">
+                                                <button type="submit" class="btn web-btn ph-btn" id="submit-intake-btn">Save Client Intake & Mark Proposal Sent</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -233,32 +330,83 @@
             $(this).addClass('active');
 
             var dealId = $(this).data('id');
-            $('#deal-card-section').slideDown(400, function() {
-                $('html, body').animate({
-                    scrollTop: $("#deal-card-section").offset().top - 20
-                }, 500);
-            });
 
             let url = '{{ route("sales-closing.show", ":id") }}'.replace(':id', dealId);
 
             $.get(url, function (res) {
                 let deal = res.deal;
                 let lead = deal.lead || {};
+                let client = deal.client || {};
 
-                $('#card_deal_id').val(deal.id);
-                $('#card_phone').val(lead.phone || '');
-                $('#card_timezone').val(lead.timezone || '');
+                if (deal.status === 'booked') {
+                    $('#deal-card-section').hide();
+                    $('#client-intake-section').slideDown(400, function() {
+                        $('html, body').animate({
+                            scrollTop: $("#client-intake-section").offset().top - 20
+                        }, 500);
+                    });
 
-                if (deal.consultation_at) {
-                    $('#card_consultation_at').val(moment(deal.consultation_at).format('YYYY-MM-DDTHH:mm'));
+                    // Populate Intake Form
+                    $('#intake_client_id').val(client.id || '');
+                    $('#intake_deal_id').val(deal.id);
+
+                    $('#intake_full_name').val(client.full_name || lead.full_name || '');
+                    $('#intake_email').val(client.email || lead.email || '');
+                    $('#intake_phone').val(client.phone || lead.phone || '');
+                    $('#intake_timezone').val(client.timezone || lead.timezone || '');
+                    $('#intake_status').val(client.status || 'active');
+
+                    let fields = [
+                        'date_of_birth', 'occupation', 'relationship_goal', 'commitment_timeline',
+                        'core_values', 'lifestyle', 'faith', 'children', 'deal_breakers',
+                        'current_stage', 'learned_from_last_relationship', 'ready_for_now', 'support_system',
+                        'partner_age_range', 'partner_location_radius', 'partner_education_level',
+                        'partner_career_stage', 'partner_must_haves', 'partner_nice_to_haves'
+                    ];
+
+                    fields.forEach(function(f) {
+                        $('#intake_' + f).val(client[f] || '');
+                    });
+
                 } else {
-                    $('#card_consultation_at').val('');
+                    $('#client-intake-section').hide();
+                    $('#deal-card-section').slideDown(400, function() {
+                        $('html, body').animate({
+                            scrollTop: $("#deal-card-section").offset().top - 20
+                        }, 500);
+                    });
+
+                    // Manage button visibility based on status
+                    $('.update-status').show();
+                    
+                    if (deal.status === 'proposal') {
+                        $('.update-status[data-status="booked"]').hide();
+                        $('.update-status[data-status="proposal"]').hide();
+                    }
+
+                    // Payment check for won and lost
+                    let payment = client.payment;
+                    if (!payment || payment.status !== 'paid') {
+                        $('.update-status[data-status="won"]').hide();
+                        $('.update-status[data-status="lost"]').hide();
+                    }
+
+                    // Populate Deal Card Form
+                    $('#card_deal_id').val(deal.id);
+                    $('#card_phone').val(lead.phone || '');
+                    $('#card_timezone').val(lead.timezone || '');
+
+                    if (deal.consultation_at) {
+                        $('#card_consultation_at').val(moment(deal.consultation_at).format('YYYY-MM-DDTHH:mm'));
+                    } else {
+                        $('#card_consultation_at').val('');
+                    }
+
+                    $('#card_zoom_link').val(deal.zoom_link || '');
+                    $('#card_notes').val(deal.notes || '');
+
+                    $('#dealCardTitle').text('Deal Card — ' + (lead.full_name || 'Unknown'));
                 }
-
-                $('#card_zoom_link').val(deal.zoom_link || '');
-                $('#card_notes').val(deal.notes || '');
-
-                $('#dealCardTitle').text('Deal Card — ' + (lead.full_name || 'Unknown'));
             }).fail(function() {
                 Swal.fire({
                     icon: 'error',
@@ -306,7 +454,7 @@
         $('#update-details-btn').click(function(e) {
             e.preventDefault();
             let dealId = $('#card_deal_id').val();
-            if(!dealId) return;
+            if (!dealId) return;
 
             let btn = $(this);
             btn.prop('disabled', true).text('Saving...');
@@ -336,6 +484,64 @@
                 },
                 complete: function() {
                     btn.prop('disabled', false).text('Save Details');
+                }
+            });
+        });
+
+        // Submit Intake Form inside Sales Closing
+        $('#intake-form').on('submit', function(e) {
+            e.preventDefault();
+
+            let clientId = $('#intake_client_id').val();
+            let dealId = $('#intake_deal_id').val();
+
+            if (!clientId) {
+                Swal.fire('Error', 'Client ID missing. Did the deal transition to booked correctly?', 'error');
+                return;
+            }
+
+            let formData = new FormData(this);
+            formData.append('_method', 'PUT');
+
+            let btn = $('#submit-intake-btn');
+            btn.prop('disabled', true).text('Saving...');
+
+            $.ajax({
+                url: '{{ url("dashboard/client-intake-application") }}/' + clientId,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(res) {
+                    if (res.success) {
+                        // Client saved, now mark deal as proposal sent
+                        $.ajax({
+                            url: '{{ url("dashboard/sales-closing") }}/' + dealId,
+                            type: 'PUT',
+                            data: {
+                                status: 'proposal'
+                            },
+                            success: function(res2) {
+                                btn.prop('disabled', false).text('Save Client Intake & Mark Proposal Sent');
+                                if (res2.success) {
+                                    Swal.fire('Success', 'Client details saved and marked as Proposal Sent!', 'success');
+                                    $('#client-intake-section').slideUp();
+                                    loadAllDeals();
+                                }
+                            }
+                        });
+                    } else {
+                        btn.prop('disabled', false).text('Save Client Intake & Mark Proposal Sent');
+                        Swal.fire('Error', res.message || 'Error saving client', 'error');
+                    }
+                },
+                error: function(err) {
+                    btn.prop('disabled', false).text('Save Client Intake & Mark Proposal Sent');
+                    let errorMsg = 'An error occurred';
+                    if (err.responseJSON && err.responseJSON.errors) {
+                        errorMsg = Object.values(err.responseJSON.errors).flat().join('\n');
+                    }
+                    Swal.fire('Error', errorMsg, 'error');
                 }
             });
         });

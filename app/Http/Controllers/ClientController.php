@@ -33,12 +33,12 @@ class ClientController extends Controller
                     $isPaid = $row->payment && $row->payment->status === 'paid';
 
                     $buttons = '<a href="'.route('client-profile', $row->id).'" class="btn web-btn me-2" style="background-color: #6c757d; border-color: #6c757d;"><i class="fa-solid fa-user"></i> View Profile</a>';
-                    
-                    if ($user->hasRole('closer') && !$isPaid) {
-                        $buttons .= '<button class="btn btn-secondary btn-sm" disabled title="Payment not paid"><i class="fa-solid fa-lock"></i> Locked</button>';
-                    } else {
+
+                    // if ($user->hasRole('closer') && !$isPaid) {
+                    //     $buttons .= '<button class="btn btn-secondary btn-sm" disabled title="Payment not paid"><i class="fa-solid fa-lock"></i> Locked</button>';
+                    // } else {
                         $buttons .= '<a href="'.route('client-intake-application.edit', $row->id).'" class="btn web-btn"><i class="fa-solid fa-edit"></i> Edit</a>';
-                    }
+                    // }
 
                     return $buttons;
                 })
@@ -54,9 +54,9 @@ class ClientController extends Controller
         $user = Auth::user();
         $isPaid = $client->payment && $client->payment->status === 'paid';
 
-        if ($user->hasRole('closer') && !$isPaid) {
-            abort(403, 'You can only edit this client after their payment is fully paid.');
-        }
+        // if ($user->hasRole('closer') && !$isPaid) {
+        //     abort(403, 'You can only edit this client after their payment is fully paid.');
+        // }
 
         return view('client-intake-application.edit', compact('client'));
     }
@@ -68,9 +68,9 @@ class ClientController extends Controller
         $user = Auth::user();
         $isPaid = $client->payment && $client->payment->status === 'paid';
 
-        if ($user->hasRole('closer') && !$isPaid) {
-            abort(403, 'You can only edit this client after their payment is fully paid.');
-        }
+        // if ($user->hasRole('closer') && !$isPaid) {
+        //     abort(403, 'You can only edit this client after their payment is fully paid.');
+        // }
 
         $request->validate([
             'full_name' => 'required|string|max:255',
@@ -112,9 +112,9 @@ class ClientController extends Controller
         $client = $photo->client;
         $user = Auth::user();
         $isPaid = $client->payment && $client->payment->status === 'paid';
-        if ($user->hasRole('closer') && !$isPaid) {
-            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
-        }
+        // if ($user->hasRole('closer') && !$isPaid) {
+        //     return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        // }
 
         if (Storage::disk('public')->exists($photo->file_path)) {
             Storage::disk('public')->delete($photo->file_path);

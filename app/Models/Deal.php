@@ -24,4 +24,9 @@ class Deal extends Model
     {
         return $this->belongsTo(User::class, 'assigned_closer_id');
     }
+
+    public function client()
+    {
+        return $this->hasOne(Client::class);
+    }
 }

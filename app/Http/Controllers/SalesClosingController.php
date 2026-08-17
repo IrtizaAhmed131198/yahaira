@@ -50,7 +50,26 @@ class SalesClosingController extends Controller
 
     public function show($id)
     {
-        $deal = Deal::with(['lead'])->findOrFail($id);
+        $deal = Deal::with(['lead', 'client.photos', 'client.payment'])->findOrFail($id);
+
+        if (in_array($deal->status, ['booked', 'won']) && !$deal->client) {
+            $lead = $deal->lead;
+            if ($lead) {
+                \App\Models\Client::firstOrCreate(
+                    ['deal_id' => $deal->id],
+                    [
+                        'lead_id' => $lead->id,
+                        'full_name' => $lead->full_name,
+                        'email' => $lead->email,
+                        'phone' => $lead->phone,
+                        'timezone' => $lead->timezone,
+                        'status' => 'active',
+                    ]
+                );
+                // Reload client relationship
+                $deal->load(['client.photos', 'client.payment']);
+            }
+        }
 
         return response()->json([
             'success' => true,
@@ -81,9 +100,10 @@ class SalesClosingController extends Controller
 
         $deal->save();
 
-        if ($request->has('status') && $request->status === 'won' && $oldStatus !== 'won') {
+        if ($request->has('status') && in_array($request->status, ['booked', 'won', 'proposal'])) {
             $lead = $deal->lead;
             if ($lead) {
+                // Creates a client if it doesn't already exist (e.g. on booked)
                 $client = Client::firstOrCreate(
                     ['deal_id' => $deal->id],
                     [
@@ -96,13 +116,16 @@ class SalesClosingController extends Controller
                     ]
                 );
 
-                Payment::firstOrCreate(
-                    ['client_id' => $client->id],
-                    [
-                        'amount' => 0.00,
-                        'status' => 'invoice_sent',
-                    ]
-                );
+                // Only create payment record if it's actually won
+                if ($request->status === 'proposal') {
+                    Payment::firstOrCreate(
+                        ['client_id' => $client->id],
+                        [
+                            'amount' => 0.00,
+                            'status' => 'invoice_sent',
+                        ]
+                    );
+                }
             }
         }
 
