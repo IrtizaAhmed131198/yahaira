@@ -379,7 +379,9 @@
                     // Manage button visibility based on status
                     $('.update-status').show();
                     
-                    if (deal.status === 'proposal') {
+                    if (deal.status === 'assigned') {
+                        $('.update-status[data-status="proposal"]').hide();
+                    } else if (deal.status === 'proposal') {
                         $('.update-status[data-status="booked"]').hide();
                         $('.update-status[data-status="proposal"]').hide();
                     }
