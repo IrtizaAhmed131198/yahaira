@@ -64,7 +64,7 @@
                                 <form id="update-deal-form">
                                     <input type="hidden" id="card_deal_id">
                                     <div class="form-box">
-                                        <div class="row">
+                                        <div class="row" id="deal-card-fields">
                                             <div class="col-lg-3 col-12 mb-3">
                                                 <label for="">Phone</label>
                                                 <input type="text" class="form-control" id="card_phone" readonly>
@@ -89,22 +89,22 @@
                                                 <label for="">Closer Notes & Objections (internal only)</label>
                                                 <input type="text" class="form-control" id="card_notes" name="notes" placeholder="Hesitant on price...">
                                             </div>
+                                        </div>
 
+                                        <div class="row">
                                             <div class="col-12 mt-3">
-                                                @if(!Auth::user()->hasRole('admin'))
-                                                    <div class="form-btn">
-                                                        <button type="button" class="btn web-btn ph-btn" id="update-details-btn">Save Details</button>
-                                                        <button type="button" class="btn web-btn update-status" data-status="booked">Mark Booked</button>
-                                                        <button type="button" class="btn web-btn update-status" data-status="proposal">Mark Proposal Sent</button>
-                                                        <button type="button" class="btn web-btn ph-btn update-status" data-status="won">Mark Won (Paid)</button>
-                                                        <button type="button" class="btn web-btn dec-btn update-status" data-status="lost">Mark Lost / Not a Fit</button>
-                                                    </div>
-                                                @endif
+                                                <div class="form-btn">
+                                                    <button type="button" class="btn web-btn ph-btn" id="update-details-btn">Save Details</button>
+                                                    <button type="button" class="btn web-btn update-status" data-status="booked">Mark Booked</button>
+                                                    <button type="button" class="btn web-btn update-status" data-status="proposal">Mark Proposal Sent</button>
+                                                    <button type="button" class="btn web-btn ph-btn update-status" data-status="won">Mark Won (Paid)</button>
+                                                    <button type="button" class="btn web-btn dec-btn update-status" data-status="lost">Mark Lost / Not a Fit</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </form>
-                                <p class="mt-3">Phone and Time Zone are pulled in automatically from the lead record — the Closer never has to ask again. Closer creates the Zoom link in their own Zoom account and pastes it here, then emails the client the details manually.</p>
+                                <p class="mt-3" id="dealCardDescription">Phone and Time Zone are pulled in automatically from the lead record — the Closer never has to ask again. Closer creates the Zoom link in their own Zoom account and pastes it here, then emails the client the details manually.</p>
                             </div>
                         </div>
                     </div>
@@ -127,6 +127,7 @@
                                             <button class="nav-link" id="nav-value-lifestyle-tab" data-bs-toggle="tab" data-bs-target="#nav-value-lifestyle" type="button" role="tab" aria-controls="nav-value-lifestyle" aria-selected="false">Values & Lifestyle</button>
                                             <button class="nav-link" id="nav-emotional-readiness-tab" data-bs-toggle="tab" data-bs-target="#nav-emotional-readiness" type="button" role="tab" aria-controls="nav-emotional-readiness" aria-selected="false">Emotional Readiness</button>
                                             <button class="nav-link" id="nav-partner-criteria-tab" data-bs-toggle="tab" data-bs-target="#nav-partner-criteria" type="button" role="tab" aria-controls="nav-partner-criteria" aria-selected="false">Partner Criteria</button>
+                                            <button class="nav-link" id="nav-photos-tab" data-bs-toggle="tab" data-bs-target="#nav-photos" type="button" role="tab" aria-controls="nav-photos" aria-selected="false">Photos</button>
                                         </div>
                                     </nav>
 
@@ -194,6 +195,20 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <!-- PHOTOS -->
+                                        <div class="tab-pane fade" id="nav-photos" role="tabpanel" aria-labelledby="nav-photos-tab">
+                                            <div class="form-box">
+                                                <div class="profile-img-box d-flex flex-wrap gap-3" id="intake_photos_container">
+                                                    <!-- Existing photos will be appended here by JS -->
+                                                    <div class="box-achivement" style="width:150px; height:150px; border:1px dashed #ddd; display:flex; align-items:center; justify-content:center;">
+                                                        <input type="file" name="photos[]" multiple accept="image/*" id="photo-upload" style="display:none;" onchange="updateFileName()">
+                                                        <button type="button" class="btn add-btn" onclick="document.getElementById('photo-upload').click()">+ Add Photos</button>
+                                                    </div>
+                                                    <div id="file-name-display" class="mt-2 w-100 text-center"></div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="form-box mt-3">
                                         <div class="row">
@@ -216,10 +231,7 @@
 <script>
     $(document).ready(function() {
 
-        @if(Auth::user()->hasRole('admin'))
-            // Disable all form inputs for admins
-            $('#update-deal-form input').prop('disabled', true);
-        @endif
+
 
         $.ajaxSetup({
             headers: {
@@ -368,6 +380,22 @@
                         $('#intake_' + f).val(client[f] || '');
                     });
 
+                    // Populate Photos
+                    $('#intake_photos_container .photo-item-dynamic').remove();
+                    if (client.photos && client.photos.length > 0) {
+                        let photosHtml = '';
+                        client.photos.forEach(function(photo) {
+                            let imgUrl = '{{ asset("storage") }}/' + photo.file_path;
+                            photosHtml += `
+                                <div class="box-achivement position-relative photo-item-dynamic" id="photo-box-${photo.id}" style="width:150px; height:150px; border:1px solid #ddd; padding:5px; text-align:center;">
+                                    <img src="${imgUrl}" alt="Photo" style="max-width:100%; max-height:100px; object-fit:contain;">
+                                    <button type="button" class="btn btn-sm btn-danger position-absolute" style="top:5px; right:5px;" onclick="deletePhoto(${photo.id})"><i class="fa fa-trash"></i></button>
+                                </div>
+                            `;
+                        });
+                        $('#intake_photos_container').prepend(photosHtml);
+                    }
+
                 } else {
                     $('#client-intake-section').hide();
                     $('#deal-card-section').slideDown(400, function() {
@@ -376,14 +404,22 @@
                         }, 500);
                     });
 
-                    // Manage button visibility based on status
+                    // Manage button and field visibility based on status
                     $('.update-status').show();
+                    $('#update-details-btn').show();
+                    $('#deal-card-fields').show();
+                    $('#dealCardDescription').show();
                     
                     if (deal.status === 'assigned') {
                         $('.update-status[data-status="proposal"]').hide();
                     } else if (deal.status === 'proposal') {
                         $('.update-status[data-status="booked"]').hide();
                         $('.update-status[data-status="proposal"]').hide();
+                        
+                        // Hide fields and save button for proposal state
+                        $('#update-details-btn').hide();
+                        $('#deal-card-fields').hide();
+                        $('#dealCardDescription').hide();
                     }
 
                     // Payment check for won and lost
@@ -425,6 +461,21 @@
             let dealId = $('#card_deal_id').val();
 
             if(!dealId) return;
+
+            if (status === 'booked') {
+                let cons = $('#card_consultation_at').val();
+                let zoom = $('#card_zoom_link').val();
+                // We can also check notes if required, but usually Date and Zoom are mandatory for booking.
+                
+                if (!cons || !zoom) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Missing Fields',
+                        text: 'Please fill in the Discovery Call Date & Time and Zoom Link before marking as booked.'
+                    });
+                    return;
+                }
+            }
 
             let url = '{{ route("sales-closing.update", ":id") }}'.replace(':id', dealId);
 
@@ -549,6 +600,51 @@
         });
 
     });
+
+    function updateFileName() {
+        var input = document.getElementById('photo-upload');
+        var display = document.getElementById('file-name-display');
+        if (input.files.length > 0) {
+            display.innerHTML = '<strong>' + input.files.length + ' photo(s) selected. Remember to save.</strong>';
+        } else {
+            display.innerHTML = '';
+        }
+    }
+
+    function deletePhoto(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch('{{ url("dashboard/client-intake-application/photo") }}/' + id, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('photo-box-' + id).remove();
+                        Swal.fire('Deleted!', 'Your photo has been deleted.', 'success');
+                    } else {
+                        Swal.fire('Error!', data.message || 'Error deleting photo', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('Error!', 'Something went wrong while deleting the photo.', 'error');
+                });
+            }
+        });
+    }
 </script>
 <style>
     .deal-item.active {

@@ -79,10 +79,6 @@ class SalesClosingController extends Controller
 
     public function update(Request $request, $id)
     {
-        if (Auth::user()->hasRole('admin')) {
-            return response()->json(['success' => false, 'message' => 'Admins have view-only access.'], 403);
-        }
-
         $deal = Deal::findOrFail($id);
         $oldStatus = $deal->status;
 
