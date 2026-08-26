@@ -345,6 +345,8 @@
 
             let url = '{{ route("sales-closing.show", ":id") }}'.replace(':id', dealId);
 
+            $('#payment-warning').remove();
+
             $.get(url, function (res) {
                 let deal = res.deal;
                 let lead = deal.lead || {};
@@ -409,13 +411,13 @@
                     $('#update-details-btn').show();
                     $('#deal-card-fields').show();
                     $('#dealCardDescription').show();
-                    
+
                     if (deal.status === 'assigned') {
                         $('.update-status[data-status="proposal"]').hide();
                     } else if (deal.status === 'proposal') {
                         $('.update-status[data-status="booked"]').hide();
                         $('.update-status[data-status="proposal"]').hide();
-                        
+
                         // Hide fields and save button for proposal state
                         $('#update-details-btn').hide();
                         $('#deal-card-fields').hide();
@@ -427,6 +429,14 @@
                     if (!payment || payment.status !== 'paid') {
                         $('.update-status[data-status="won"]').hide();
                         $('.update-status[data-status="lost"]').hide();
+
+                        if ($('#payment-warning').length === 0 && deal.status == 'proposal') {
+                            $('.form-btn').append(`
+                                <p id="payment-warning" style="color:red;">
+                                    ⚠️ This deal is marked as Won or Lost, but the client has not completed payment. Please ensure payment is received before proceeding.
+                                </p>
+                            `);
+                        }
                     }
 
                     // Populate Deal Card Form
@@ -466,7 +476,7 @@
                 let cons = $('#card_consultation_at').val();
                 let zoom = $('#card_zoom_link').val();
                 // We can also check notes if required, but usually Date and Zoom are mandatory for booking.
-                
+
                 if (!cons || !zoom) {
                     Swal.fire({
                         icon: 'warning',
