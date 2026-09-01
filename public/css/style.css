@@ -705,7 +705,7 @@ ul {
     width: 100%;
     padding: 10px 20px;
     text-transform: uppercase;
-    background: #e1342a;
+    background: #000939;
     color: var(--wth-clr);
     font-weight: 400;
     font-size: 20px;
@@ -734,6 +734,10 @@ p.account-line a {
 
 .login-banner .login-banner-heading h1 .red {
     color: #e1342a;
+}
+
+.login-banner .login-banner-heading h1 .blue {
+    color: #000939;
 }
 
 

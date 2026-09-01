@@ -53,8 +53,11 @@
                     <div class="login-banner">
                         <img src="images/login-img.png" class="img-fluid" alt="">
                         <div class="login-banner-heading">
-                            <h1>Now Say <span class="red"><b>Good Bye</b></span> to your <br>
+                            {{-- <h1>Now Say <span class="red"><b>Good Bye</b></span> to your <br>
                                 <span class="red">Neighborhood</span> matchmakers
+                            </h1> --}}
+                            <h1>Modern <span class="blue"><b>Matchmaking</b></span> or meet <br>
+                                <span class="blue">your person the one</span> who chooses you back!
                             </h1>
                         </div>
                     </div>
