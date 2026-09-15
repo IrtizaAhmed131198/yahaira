@@ -46,12 +46,13 @@ class TeamUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'role' => 'required|exists:roles,name',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make('password'),
+            'password' => Hash::make($request->password),
         ]);
 
         $user->assignRole($request->role);
@@ -82,20 +83,31 @@ class TeamUserController extends Controller
     public function update(Request $request, $id)
     {
         $user = User::find($id);
+
         if (!$user) {
-            return response()->json(['success' => false, 'message' => 'User not found'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found'
+            ], 404);
         }
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,'.$id,
+            'email' => 'required|email|unique:users,email,' . $id,
             'role' => 'required|exists:roles,name',
+            'password' => 'nullable|string|min:8|confirmed',
         ]);
 
-        $user->update([
+        $data = [
             'name' => $request->name,
             'email' => $request->email,
-        ]);
+        ];
+
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        $user->update($data);
 
         $user->syncRoles([$request->role]);
 
@@ -122,7 +134,7 @@ class TeamUserController extends Controller
 
         $userName = $user->name;
         $user->delete();
-        
+
         Activity::create([
             'user_id' => Auth::id(),
             'action' => 'deleted user',
