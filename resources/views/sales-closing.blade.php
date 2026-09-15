@@ -9,7 +9,7 @@
                 <div class="dashboard-heading">
                     <h4> Sales / Closing</h4>
                     <p>
-                        Closer workflow — qualified lead to signed deal
+                        Setter workflow — qualified lead to signed deal
                     </p>
                 </div>
             </div>
@@ -17,8 +17,8 @@
                 <div class="tab-icon-btn">
                     {{-- <ul>
                         <li><p> Admin · <span>View only</span></p></li>
-                        <li><p> Setter · <span>None</span></p></li>
-                        <li><p> Closer · <span>Full</span></p></li>
+                        <li><p> Lead · <span>None</span></p></li>
+                        <li><p> Setter · <span>Full</span></p></li>
                         <li><p> Matchmaker / Coach / Billing · <span>None</span></p></li>
                     </ul> --}}
                     <div class="search-info">
@@ -86,7 +86,7 @@
                                                 <input type="text" class="form-control" id="card_zoom_link" name="zoom_link" placeholder="zoom.us/j/123456789">
                                             </div>
                                             <div class="col-lg-6 col-12 mb-3">
-                                                <label for="">Closer Notes & Objections (internal only)</label>
+                                                <label for="">Setter Notes & Objections (internal only)</label>
                                                 <input type="text" class="form-control" id="card_notes" name="notes" placeholder="Hesitant on price...">
                                             </div>
                                         </div>
@@ -104,7 +104,7 @@
                                         </div>
                                     </div>
                                 </form>
-                                <p class="mt-3" id="dealCardDescription">Phone and Time Zone are pulled in automatically from the lead record — the Closer never has to ask again. Closer creates the Zoom link in their own Zoom account and pastes it here, then emails the client the details manually.</p>
+                                <p class="mt-3" id="dealCardDescription">Phone and Time Zone are pulled in automatically from the lead record — the Setter never has to ask again. Setter creates the Zoom link in their own Zoom account and pastes it here, then emails the client the details manually.</p>
                             </div>
                         </div>
                     </div>

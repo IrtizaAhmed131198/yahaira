@@ -48,13 +48,13 @@ class SeederController extends Controller
             ];
 
             // Get users for roles
-            $closer = User::role('closer')->first();
             $setter = User::role('setter')->first();
+            $leadUser = User::role('lead')->first();
             $matchmaker = User::role('matchmaker')->first();
 
             // Fallbacks in case roles don't exist
-            if (!$closer) $closer = User::first();
             if (!$setter) $setter = User::first();
+            if (!$leadUser) $leadUser = User::first();
             if (!$matchmaker) $matchmaker = User::first();
 
             $statuses = ['new', 'contacted', 'qualified', 'handed_off', 'lost'];
@@ -73,19 +73,19 @@ class SeederController extends Controller
                     'email' => $faker->unique()->safeEmail,
                     'phone' => $faker->phoneNumber,
                     'status' => $status,
-                    'assigned_setter_id' => $setter->id,
+                    'assigned_lead_id' => $leadUser->id,
                     'source' => $faker->randomElement(['Facebook', 'Instagram', 'Referral', 'Google']),
                 ]);
                 
                 LeadNote::create([
                     'lead_id' => $lead->id,
-                    'user_id' => $setter->id,
+                    'user_id' => $leadUser->id,
                     'note' => $faker->sentence
                 ]);
 
                 // Create activity for lead
                 Activity::create([
-                    'user_id' => $setter->id,
+                    'user_id' => $leadUser->id,
                     'action' => 'created lead',
                     'subject_type' => Lead::class,
                     'subject_id' => $lead->id,
@@ -105,7 +105,7 @@ class SeederController extends Controller
 
                     $deal = Deal::create([
                         'lead_id' => $lead->id,
-                        'assigned_closer_id' => $closer->id,
+                        'assigned_setter_id' => $setter->id,
                         'status' => $dealStatus,
                         'consultation_at' => $consultation_at,
                         'zoom_link' => $zoom_link,
@@ -113,11 +113,11 @@ class SeederController extends Controller
                     ]);
 
                     Activity::create([
-                        'user_id' => $closer->id,
+                        'user_id' => $setter->id,
                         'action' => 'assigned deal',
                         'subject_type' => Lead::class,
                         'subject_id' => $lead->id,
-                        'description' => 'Deal assigned to closer'
+                        'description' => 'Deal assigned to setter'
                     ]);
 
                     // 5. Clients for Won Deals
@@ -144,7 +144,7 @@ class SeederController extends Controller
                         ]);
 
                         Activity::create([
-                            'user_id' => $closer->id,
+                            'user_id' => $setter->id,
                             'action' => 'created client',
                             'subject_type' => Client::class,
                             'subject_id' => $client->id,

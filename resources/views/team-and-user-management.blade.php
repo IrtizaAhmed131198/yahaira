@@ -130,13 +130,13 @@
                                                 </label>
                                             </div>
                                             <div class="col-12">
-                                                <label for="">Setter Round Robin</label>
-                                                <input type="text" class="form-control" placeholder="On — 3 Setters"
+                                                <label for="">Lead Round Robin</label>
+                                                <input type="text" class="form-control" placeholder="On — 3 Leads"
                                                     readonly>
                                             </div>
                                             <div class="col-12">
-                                                <label for="">Closer Round Robin</label>
-                                                <input type="text" class="form-control" placeholder="On — 2 Closers"
+                                                <label for="">Setter Round Robin</label>
+                                                <input type="text" class="form-control" placeholder="On — 2 Setters"
                                                     readonly>
                                             </div>
                                             <div class="col-12">

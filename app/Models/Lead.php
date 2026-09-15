@@ -18,9 +18,9 @@ class Lead extends Model
         ];
     }
 
-    public function setter()
+    public function lead()
     {
-        return $this->belongsTo(User::class, 'assigned_setter_id');
+        return $this->belongsTo(User::class, 'assigned_lead_id');
     }
 
     public function notes()

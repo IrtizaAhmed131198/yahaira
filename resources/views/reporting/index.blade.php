@@ -72,8 +72,8 @@
                                                 <input type="text" class="form-control" value="{{ $pipelineQualified }}" readonly>
                                             </div>
                                             <div class="col-12">
-                                                <label for="">Closer Queue</label>
-                                                <input type="text" class="form-control" value="{{ $pipelineCloserQueue }}" readonly>
+                                                <label for="">Setter Queue</label>
+                                                <input type="text" class="form-control" value="{{ $pipelineSetterQueue }}" readonly>
                                             </div>
                                             <div class="col-12">
                                                 <label for="">Active Clients</label>

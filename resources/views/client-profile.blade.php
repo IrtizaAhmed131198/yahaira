@@ -68,8 +68,8 @@
                                                         <label>Snapshot</label>
                                                     </div>
                                                     <div class="col-12">
-                                                        <label>Assigned Coach / Closer</label>
-                                                        <input type="text" class="form-control" value="{{ $client->deal && $client->deal->closer ? $client->deal->closer->name : 'Unassigned' }}" readonly>
+                                                        <label>Assigned Coach / Setter</label>
+                                                        <input type="text" class="form-control" value="{{ $client->deal && $client->deal->setter ? $client->deal->setter->name : 'Unassigned' }}" readonly>
                                                     </div>
                                                     <div class="col-12">
                                                         <label>Package</label>

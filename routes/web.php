@@ -48,7 +48,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/dashboard/team-and-user-management/{id}', [TeamUserController::class, 'destroy'])->name('team-and-user-management.destroy');
     });
 
-    Route::middleware('role:admin|setter|closer')->group(function () {
+    Route::middleware('role:admin|lead|setter')->group(function () {
         Route::get('/dashboard/lead-management', [LeadController::class, 'index'])->name('lead-management');
         Route::get('/dashboard/lead-management/data', [LeadController::class, 'getLeads'])->name('lead-management.data');
         Route::post('/dashboard/lead-management', [LeadController::class, 'store'])->name('lead-management.store');
@@ -57,7 +57,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/dashboard/lead-management/{id}/notes', [LeadController::class, 'addNote'])->name('lead-management.notes');
         Route::get('/dashboard/lead-management/{id}/notes-data', [LeadController::class, 'getNotesData'])->name('lead-management.notes-data');
     });
-    Route::middleware('role:admin|closer')->group(function () {
+    Route::middleware('role:admin|setter')->group(function () {
         Route::get('/dashboard/client-intake-application', [ClientController::class, 'index'])->name('client-intake-application');
         Route::get('/dashboard/client-intake-application/data', [ClientController::class, 'getClients'])->name('client-intake-application.data');
         Route::get('/dashboard/client-intake-application/{id}/edit', [ClientController::class, 'edit'])->name('client-intake-application.edit');
@@ -70,7 +70,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/dashboard/sales-closing/{id}', [SalesClosingController::class, 'update'])->name('sales-closing.update');
     });
 
-    Route::middleware('role:admin|closer|billing')->group(function () {
+    Route::middleware('role:admin|setter|billing')->group(function () {
         Route::get('/dashboard/payments', [PaymentController::class, 'index'])->name('payments');
         Route::get('/dashboard/payments/data', [PaymentController::class, 'getPayments'])->name('payments.data');
         Route::get('/dashboard/payments/{id}', [PaymentController::class, 'show'])->name('payments.show');

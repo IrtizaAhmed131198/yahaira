@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $roles = ['admin', 'setter', 'closer', 'matchmaker', 'coach', 'billing'];
+        $roles = ['admin', 'lead', 'setter', 'matchmaker', 'coach', 'billing'];
 
         foreach ($roles as $role) {
             $user = User::create([

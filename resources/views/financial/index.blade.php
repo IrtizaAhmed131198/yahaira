@@ -21,7 +21,7 @@
                             <p> Admin / Founder · <span>Full — only role that can open this page</span></p>
                         </li>
                         <li>
-                            <p> Every other role (incl. Closer) · <span>None</span></p>
+                            <p> Every other role (incl. Setter) · <span>None</span></p>
                         </li>
                     </ul>
 
@@ -60,22 +60,22 @@
                         <div class="col-lg-6 col-md-6 col-12">
                             <div class="review-user">
                                 <div class="form-box pt-3">
-                                    <label for="">Sales Performance by Closer
+                                    <label for="">Sales Performance by Setter
                                     </label>
                                     <table class="team-users">
                                         <thead>
                                             <tr>
-                                                <th>Closer</th>
+                                                <th>Setter</th>
                                                 <th>Won</th>
                                                 <th>Revenue</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @forelse($closerPerformance as $closer)
+                                            @forelse($setterPerformance as $setter)
                                             <tr>
-                                                <td>{{ $closer['name'] }}</td>
-                                                <td>{{ $closer['won_percentage'] }}%</td>
-                                                <td>${{ number_format($closer['revenue']) }}</td>
+                                                <td>{{ $setter['name'] }}</td>
+                                                <td>{{ $setter['won_percentage'] }}%</td>
+                                                <td>${{ number_format($setter['revenue']) }}</td>
                                             </tr>
                                             @empty
                                             <tr>

@@ -34,34 +34,34 @@ class FinancialController extends Controller
         // 4. Renewal Rate (Placeholder)
         $renewalRate = 71; // Placeholder percentage
 
-        // 5. Sales Performance by Closer
-        $closers = User::role('closer')->get();
-        $closerPerformance = [];
+        // 5. Sales Performance by Setter
+        $setters = User::role('setter')->get();
+        $setterPerformance = [];
 
-        foreach ($closers as $closer) {
-            $totalDeals = Deal::where('assigned_closer_id', $closer->id)->count();
-            $wonDeals = Deal::where('assigned_closer_id', $closer->id)->where('status', 'won')->count();
+        foreach ($setters as $setter) {
+            $totalDeals = Deal::where('assigned_setter_id', $setter->id)->count();
+            $wonDeals = Deal::where('assigned_setter_id', $setter->id)->where('status', 'won')->count();
             
             $wonPercentage = $totalDeals > 0 ? round(($wonDeals / $totalDeals) * 100) : 0;
 
             $revenue = Payment::where('status', 'paid')
-                ->whereHas('client.deal', function ($query) use ($closer) {
-                    $query->where('assigned_closer_id', $closer->id);
+                ->whereHas('client.deal', function ($query) use ($setter) {
+                    $query->where('assigned_setter_id', $setter->id);
                 })
                 ->sum('amount');
 
-            // Only show closers who have actually been assigned deals
+            // Only show setters who have actually been assigned deals
             if ($totalDeals > 0) {
-                $closerPerformance[] = [
-                    'name' => $closer->name,
+                $setterPerformance[] = [
+                    'name' => $setter->name,
                     'won_percentage' => $wonPercentage,
                     'revenue' => $revenue
                 ];
             }
         }
         
-        // Sort closers by highest revenue
-        usort($closerPerformance, function($a, $b) {
+        // Sort setters by highest revenue
+        usort($setterPerformance, function($a, $b) {
             return $b['revenue'] <=> $a['revenue'];
         });
 
@@ -93,7 +93,7 @@ class FinancialController extends Controller
             'revenueYTD',
             'profitThisMonth',
             'renewalRate',
-            'closerPerformance',
+            'setterPerformance',
             'revenueByPackage'
         ));
     }

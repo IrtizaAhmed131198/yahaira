@@ -20,10 +20,10 @@
                             <p> Admin · <span>Full</span></p>
                         </li>
                         <li>
-                            <p> Setter · <span>Full (own leads)</span></p>
+                            <p> Lead · <span>Full (own leads)</span></p>
                         </li>
                         <li>
-                            <p> Closer · <span>View only (handed off)</span></p>
+                            <p> Setter · <span>View only (handed off)</span></p>
                         </li>
                         <li>
                             <p> Matchmaker / Coach / Billing · <span>None</span></p>

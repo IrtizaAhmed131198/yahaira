@@ -34,10 +34,10 @@ class DashboardController extends Controller
         $activeLeadsClients = 0;
         if ($user->hasRole('admin')) {
             $activeLeadsClients = Lead::where('status', 'active')->count() + Client::where('status', 'active')->count();
+        } elseif ($user->hasRole('lead')) {
+            $activeLeadsClients = Lead::where('assigned_lead_id', $user->id)->where('status', 'active')->count();
         } elseif ($user->hasRole('setter')) {
-            $activeLeadsClients = Lead::where('assigned_setter_id', $user->id)->where('status', 'active')->count();
-        } elseif ($user->hasRole('closer')) {
-            $activeLeadsClients = Deal::where('assigned_closer_id', $user->id)->whereNotIn('status', ['lost'])->count(); // Assuming deals that aren't lost mean active leads
+            $activeLeadsClients = Deal::where('assigned_setter_id', $user->id)->whereNotIn('status', ['lost'])->count(); // Assuming deals that aren't lost mean active leads
         } else {
             // Default for other roles
             $activeLeadsClients = 0;
@@ -46,11 +46,11 @@ class DashboardController extends Controller
         // 4. Today's Agenda (Merge Deals and Match Dates)
         $agenda = collect();
 
-        $todayDeals = Deal::with(['lead', 'closer'])->whereDate('consultation_at', $today)->get();
+        $todayDeals = Deal::with(['lead', 'setter'])->whereDate('consultation_at', $today)->get();
         foreach ($todayDeals as $deal) {
             $agenda->push([
                 'title' => 'Discovery Call — ' . ($deal->lead ? $deal->lead->full_name : 'Unknown'),
-                'details' => ($deal->zoom_link ? 'Zoom' : 'Call') . ' · Closer: ' . ($deal->closer ? $deal->closer->name : 'Unassigned'),
+                'details' => ($deal->zoom_link ? 'Zoom' : 'Call') . ' · Setter: ' . ($deal->setter ? $deal->setter->name : 'Unassigned'),
                 'time' => Carbon::parse($deal->consultation_at)->format('h:i A'),
                 'sort_time' => Carbon::parse($deal->consultation_at)
             ]);
@@ -82,8 +82,8 @@ class DashboardController extends Controller
             ->whereNotNull('notes')
             ->where('notes', '!=', '');
 
-        if ($user->hasRole('closer') && !$user->hasRole('admin')) {
-            $followUpsQuery->where('assigned_closer_id', $user->id);
+        if ($user->hasRole('setter') && !$user->hasRole('admin')) {
+            $followUpsQuery->where('assigned_setter_id', $user->id);
         }
 
         $followUpsCount = $followUpsQuery->count();

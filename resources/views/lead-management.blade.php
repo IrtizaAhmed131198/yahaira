@@ -9,7 +9,7 @@
                 <div class="dashboard-heading">
                     <h4> Lead Management</h4>
                     <p>
-                        Setter workflow — new leads to qualified
+                        Lead workflow — new leads to qualified
                     </p>
                 </div>
             </div>
@@ -20,10 +20,10 @@
                             <p> Admin · <span>Full</span></p>
                         </li>
                         <li>
-                            <p> Setter · <span>Full (own leads)</span></p>
+                            <p> Lead · <span>Full (own leads)</span></p>
                         </li>
                         <li>
-                            <p> Closer · <span>View only (handed off)</span></p>
+                            <p> Setter · <span>View only (handed off)</span></p>
                         </li>
                         <li>
                             <p> Matchmaker / Coach / Billing · <span>None</span></p>
@@ -36,7 +36,7 @@
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </form>
                         <div class="add-user">
-                            @if(!Auth::user()->hasRole('closer'))
+                            @if(!Auth::user()->hasRole('setter'))
                                 <button class="btn web-btn" data-bs-toggle="modal" data-bs-target="#addLeadModal">Add New Lead</button>
                             @endif
                         </div>
@@ -124,7 +124,7 @@
                                                             id="card_next_followup" name="next_followup_at">
                                                     </div>
                                                     <div class="col-12 mt-2 text-end">
-                                                        @if(!Auth::user()->hasRole('closer'))
+                                                        @if(!Auth::user()->hasRole('setter'))
                                                             <button type="button" class="btn web-btn ph-btn" id="update-details-btn">Save Lead Details</button>
                                                         @endif
                                                     </div>
@@ -136,7 +136,7 @@
                                                     <ul id="lead-notes-container" style="max-height: 300px; overflow-y: auto;">
                                                         <!-- Notes loaded via AJAX -->
                                                     </ul>
-                                                    @if(!Auth::user()->hasRole('admin') && !Auth::user()->hasRole('closer'))
+                                                    @if(!Auth::user()->hasRole('admin') && !Auth::user()->hasRole('setter'))
                                                         <div class="mt-3">
                                                             <textarea class="form-control mb-2" id="new_note_text" rows="2" placeholder="Type a note... (e.g. Called — very interested)"></textarea>
                                                             <button type="button" class="btn web-btn ph-btn" id="save-note-btn">Add Note</button>
@@ -148,7 +148,7 @@
                                         </div>
                                     </div>
                                 </form>
-                                <p class="mt-3">Setter places this call manually from their own phone and types the note
+                                <p class="mt-3">Lead places this call manually from their own phone and types the note
                                     afterward — the CRM does not dial or send anything. Phone and Time Zone are
                                     captured once, right here, and carry forward automatically into every later
                                     scheduling screen.</p>
@@ -240,8 +240,8 @@
 <script>
     $(document).ready(function() {
 
-        @if(Auth::user()->hasRole('closer'))
-            // Disable all form inputs for closers
+        @if(Auth::user()->hasRole('setter'))
+            // Disable all form inputs for setters
             $('#update-lead-form input, #update-lead-form select').prop('disabled', true);
         @endif
 

@@ -89,9 +89,9 @@ class SalesClosingController extends Controller
             }
         }
 
-        // Set the assigned closer if not already assigned
-        if (!$deal->assigned_closer_id && Auth::user()->hasRole('closer')) {
-            $deal->assigned_closer_id = Auth::id();
+        // Set the assigned setter if not already assigned
+        if (!$deal->assigned_setter_id && Auth::user()->hasRole('setter')) {
+            $deal->assigned_setter_id = Auth::id();
         }
 
         $deal->save();

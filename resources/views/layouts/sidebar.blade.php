@@ -4,12 +4,12 @@
         <li>
             <a href="{{ route('dashboard') }}">My Dashboard</a>
         </li>
-        @if(Auth::user()->hasRole('admin|setter|closer'))
+        @if(Auth::user()->hasRole('admin|lead|setter'))
         <li>
             <a href="{{ route('lead-management') }}">Lead Management</a>
         </li>
         @endif
-        @if(Auth::user()->hasRole('admin|closer'))
+        @if(Auth::user()->hasRole('admin|setter'))
         <li>
             <a href="{{ route('sales-closing') }}">Sales / Closing</a>
         </li>
@@ -17,7 +17,7 @@
             <a href="{{ route('client-intake-application') }}">Client Intake / Application</a>
         </li>
         @endif
-        @if(Auth::user()->hasRole('admin|closer|billing'))
+        @if(Auth::user()->hasRole('admin|setter|billing'))
         <li>
             <a href="{{ route('payments') }}">Payments</a>
         </li>
@@ -62,12 +62,12 @@
         <li>
             <a href="{{ route('dashboard') }}">My Dashboard</a>
         </li>
-        @if(Auth::user()->hasRole('admin|setter'))
+        @if(Auth::user()->hasRole('admin|lead'))
         <li>
             <a href="{{ route('lead-management') }}">Lead Management</a>
         </li>
         @endif
-        @if(Auth::user()->hasRole('admin|closer'))
+        @if(Auth::user()->hasRole('admin|setter'))
         <li>
             <a href="{{ route('sales-closing') }}">Sales / Closing</a>
         </li>
@@ -75,7 +75,7 @@
             <a href="{{ route('client-intake-application') }}">Client Intake / Application</a>
         </li>
         @endif
-        @if(Auth::user()->hasRole('admin|closer|billing'))
+        @if(Auth::user()->hasRole('admin|setter|billing'))
         <li>
             <a href="{{ route('payments') }}">Payments</a>
         </li>

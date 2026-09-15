@@ -15,20 +15,20 @@ class LeadController extends Controller
 {
     public function index()
     {
-        // Get setters and closers for assignment dropdowns if needed
-        $setters = User::role('setter')->get();
-        return view('lead-management', compact('setters'));
+        // Get leads and setters for assignment dropdowns if needed
+        $leads = User::role('lead')->get();
+        return view('lead-management', compact('leads'));
     }
 
     public function getLeads(Request $request)
     {
-        $query = Lead::with('setter')->orderBy('created_at', 'desc');
+        $query = Lead::with('lead')->orderBy('created_at', 'desc');
 
 
 
-        // If setter, only show their leads
-        if (Auth::user()->hasRole('setter') && !Auth::user()->hasRole('admin')) {
-            $query->where('assigned_setter_id', Auth::id());
+        // If lead, only show their leads
+        if (Auth::user()->hasRole('lead') && !Auth::user()->hasRole('admin')) {
+            $query->where('assigned_lead_id', Auth::id());
         }
 
         // Status filter
@@ -38,7 +38,7 @@ class LeadController extends Controller
                 $query->where(function($q) {
                     $q->where('status', 'handed_off')
                       ->orWhere('status', 'like', '%hand%')
-                      ->orWhere('status', 'like', '%closer%');
+                      ->orWhere('status', 'like', '%setter%');
                 });
             } else {
                 $query->where('status', $status);
@@ -62,10 +62,10 @@ class LeadController extends Controller
 
     public function show($id)
     {
-        $lead = Lead::with('setter')->findOrFail($id);
+        $lead = Lead::with('lead')->findOrFail($id);
 
-        // Authorization check for setters
-        if (Auth::user()->hasRole('setter') && !Auth::user()->hasRole('admin') && $lead->assigned_setter_id != Auth::id()) {
+        // Authorization check for leads
+        if (Auth::user()->hasRole('lead') && !Auth::user()->hasRole('admin') && $lead->assigned_lead_id != Auth::id()) {
             return response()->json(['success' => false, 'message' => 'Unauthorized access to this lead.'], 403);
         }
         
@@ -87,8 +87,8 @@ class LeadController extends Controller
     {
         $lead = Lead::findOrFail($id);
 
-        // Authorization check for setters
-        if (Auth::user()->hasRole('setter') && !Auth::user()->hasRole('admin') && $lead->assigned_setter_id != Auth::id()) {
+        // Authorization check for leads
+        if (Auth::user()->hasRole('lead') && !Auth::user()->hasRole('admin') && $lead->assigned_lead_id != Auth::id()) {
             return response()->json(['success' => false, 'message' => 'Unauthorized access to this lead.'], 403);
         }
 
@@ -107,8 +107,8 @@ class LeadController extends Controller
 
     public function store(Request $request)
     {
-        if (Auth::user()->hasRole('closer')) {
-            return response()->json(['success' => false, 'message' => 'Closers have view-only access.'], 403);
+        if (Auth::user()->hasRole('setter')) {
+            return response()->json(['success' => false, 'message' => 'Setters have view-only access.'], 403);
         }
         $request->validate([
             'full_name' => 'required|string|max:255',
@@ -122,7 +122,7 @@ class LeadController extends Controller
             'phone' => $request->phone,
             'source' => $request->source ?? 'Manual',
             'status' => 'new',
-            'assigned_setter_id' => Auth::user()->hasRole('setter') ? Auth::id() : null, // Auto-assign to self if setter
+            'assigned_lead_id' => Auth::user()->hasRole('lead') ? Auth::id() : null, // Auto-assign to self if lead
         ]);
 
         $this->logActivity('created lead', Lead::class, $lead->id, 'Lead created manually');
@@ -143,13 +143,13 @@ class LeadController extends Controller
 
     public function update(Request $request, $id)
     {
-        if (Auth::user()->hasRole('closer')) {
-            return response()->json(['success' => false, 'message' => 'Closers have view-only access.'], 403);
+        if (Auth::user()->hasRole('setter')) {
+            return response()->json(['success' => false, 'message' => 'Setters have view-only access.'], 403);
         }
 
         $lead = Lead::findOrFail($id);
 
-        if (Auth::user()->hasRole('setter') && $lead->assigned_setter_id != Auth::id()) {
+        if (Auth::user()->hasRole('lead') && $lead->assigned_lead_id != Auth::id()) {
             return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
         }
 
@@ -184,8 +184,8 @@ class LeadController extends Controller
 
     public function addNote(Request $request, $id)
     {
-        if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('closer')) {
-            return response()->json(['success' => false, 'message' => 'Admins and Closers cannot add notes.'], 403);
+        if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('setter')) {
+            return response()->json(['success' => false, 'message' => 'Admins and Setters cannot add notes.'], 403);
         }
 
         $request->validate([
@@ -194,7 +194,7 @@ class LeadController extends Controller
 
         $lead = Lead::findOrFail($id);
 
-        if (Auth::user()->hasRole('setter') && $lead->assigned_setter_id != Auth::id()) {
+        if (Auth::user()->hasRole('lead') && $lead->assigned_lead_id != Auth::id()) {
             return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
         }
 

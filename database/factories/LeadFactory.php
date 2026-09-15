@@ -17,7 +17,7 @@ class LeadFactory extends Factory
         $services = ['Premier', 'VIP Coaching', 'Matchmaking Standard'];
         $budgets = ['$5k–$10k', '$10k–$15k', '$15k–$20k', '$20k+'];
         
-        $setter = User::role('setter')->inRandomOrder()->first();
+        $lead = User::role('lead')->inRandomOrder()->first();
 
         return [
             'full_name' => fake()->name(),
@@ -28,7 +28,7 @@ class LeadFactory extends Factory
             'status' => fake()->randomElement($statuses),
             'interested_service' => fake()->randomElement($services),
             'budget_range' => fake()->randomElement($budgets),
-            'assigned_setter_id' => $setter ? $setter->id : null,
+            'assigned_lead_id' => $lead ? $lead->id : null,
             'next_followup_at' => fake()->optional()->dateTimeBetween('+1 days', '+2 weeks'),
             'created_at' => fake()->dateTimeBetween('-2 months', 'now'),
         ];

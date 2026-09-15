@@ -28,7 +28,7 @@ class ReportingController extends Controller
         // 4. Pipeline Summary
         $pipelineNew = Lead::where('status', 'new')->count();
         $pipelineQualified = Lead::where('status', 'qualified')->count();
-        $pipelineCloserQueue = Lead::where('status', 'handed_off')->count();
+        $pipelineSetterQueue = Lead::where('status', 'handed_off')->count();
         // $activeClientsCount already calculated
 
         // 5. Lead Source Performance
@@ -49,7 +49,7 @@ class ReportingController extends Controller
             'activeClientsCount',
             'pipelineNew',
             'pipelineQualified',
-            'pipelineCloserQueue',
+            'pipelineSetterQueue',
             'sourcePerformance'
         ));
     }
